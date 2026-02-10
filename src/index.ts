@@ -16,7 +16,10 @@ const rendered = render(slideshow, fenceRegistry, generateNavigationScript());
 
 const htmlHeaders = { "Content-Type": "text/html; charset=utf-8" };
 
+const port = parseInt(process.env.PORT ?? "3000", 10);
+
 const server = Bun.serve({
+  port,
   fetch(req) {
     const url = new URL(req.url);
 
