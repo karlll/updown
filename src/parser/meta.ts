@@ -16,8 +16,13 @@ export function processMetaFences(slide: Slide): void {
       // Remove the meta-fence node
       slide.nodes.splice(i, 1);
 
-      // If there's no preceding sibling, discard silently
-      if (i === 0) continue;
+      // If there's no preceding sibling, attach to the slide itself
+      if (i === 0) {
+        const metadata = parseYamlMetadata(node.value, "data-meta-");
+        slide.metadata.cssClasses.push(...metadata.cssClasses);
+        Object.assign(slide.metadata.attributes, metadata.attributes);
+        continue;
+      }
 
       // Parse and attach metadata to the preceding sibling
       const target = slide.nodes[i - 1]! as RootContent & { data?: Record<string, unknown> };

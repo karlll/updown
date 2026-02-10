@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { splitIntoSlides } from "../../src/parser/slides.ts";
-import type { RootContent, Heading, Paragraph, ThematicBreak } from "mdast";
+import type { RootContent, Code, Heading, Paragraph, ThematicBreak } from "mdast";
 
 function h(depth: 1 | 2 | 3 | 4 | 5 | 6, text: string): Heading {
   return { type: "heading", depth, children: [{ type: "text", value: text }] };
@@ -11,6 +11,10 @@ function p(text: string): Paragraph {
 }
 
 const hr: ThematicBreak = { type: "thematicBreak" };
+
+function metaCode(value: string): Code {
+  return { type: "code", lang: "meta", value };
+}
 
 describe("splitIntoSlides", () => {
   test("empty input returns empty array", () => {
@@ -125,5 +129,46 @@ describe("splitIntoSlides", () => {
     const slides = splitIntoSlides([p("content"), hr]);
     expect(slides).toHaveLength(1);
     expect(slides[0]!.nodes).toEqual([p("content")]);
+  });
+
+  test("--- + meta-fence + h1 produces one slide transition with meta-fence in new slide", () => {
+    const meta = metaCode("bg: red");
+    const slides = splitIntoSlides([p("intro"), hr, meta, h(1, "Title"), p("body")]);
+    expect(slides).toHaveLength(2);
+    expect(slides[0]!.nodes).toEqual([p("intro")]);
+    expect(slides[1]!.nodes).toEqual([meta, h(1, "Title"), p("body")]);
+  });
+
+  test("--- + meta-fence + h2 produces one slide transition", () => {
+    const meta = metaCode("class: fancy");
+    const slides = splitIntoSlides([p("intro"), hr, meta, h(2, "Section"), p("body")]);
+    expect(slides).toHaveLength(2);
+    expect(slides[0]!.nodes).toEqual([p("intro")]);
+    expect(slides[1]!.nodes).toEqual([meta, h(2, "Section"), p("body")]);
+  });
+
+  test("--- + multiple meta-fences + heading produces one slide transition", () => {
+    const meta1 = metaCode("a: 1");
+    const meta2 = metaCode("b: 2");
+    const slides = splitIntoSlides([p("intro"), hr, meta1, meta2, h(1, "Title")]);
+    expect(slides).toHaveLength(2);
+    expect(slides[1]!.nodes).toEqual([meta1, meta2, h(1, "Title")]);
+  });
+
+  test("--- + meta-fence without heading is a regular break (meta in new slide)", () => {
+    const meta = metaCode("bg: blue");
+    const slides = splitIntoSlides([p("above"), hr, meta, p("below")]);
+    // meta-fence is not a heading, so --- is a regular break
+    // meta-fence and p("below") end up in the new slide
+    expect(slides).toHaveLength(2);
+    expect(slides[0]!.nodes).toEqual([p("above")]);
+    expect(slides[1]!.nodes).toEqual([meta, p("below")]);
+  });
+
+  test("all slides have empty metadata by default", () => {
+    const slides = splitIntoSlides([h(1, "A"), hr, p("B")]);
+    for (const slide of slides) {
+      expect(slide.metadata).toEqual({ attributes: {}, cssClasses: [] });
+    }
   });
 });

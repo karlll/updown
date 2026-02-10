@@ -16,7 +16,7 @@ function metaCode(value: string): Code {
 }
 
 function slide(nodes: RootContent[]): Slide {
-  return { index: 1, nodes };
+  return { index: 1, nodes, metadata: { attributes: {}, cssClasses: [] } };
 }
 
 describe("processMetaFences", () => {
@@ -48,11 +48,35 @@ describe("processMetaFences", () => {
     expect(s.nodes[0]!.type).toBe("paragraph");
   });
 
-  test("meta-fence with no preceding sibling is silently discarded", () => {
+  test("meta-fence with no preceding sibling attaches to slide metadata", () => {
     const s = slide([metaCode("a: b"), p("text")]);
     processMetaFences(s);
     expect(s.nodes).toHaveLength(1);
     expect(s.nodes[0]!.type).toBe("paragraph");
+    expect(s.metadata).toEqual({
+      attributes: { "data-meta-a": "b" },
+      cssClasses: [],
+    });
+  });
+
+  test("first-node meta-fence with class attaches cssClasses to slide", () => {
+    const s = slide([metaCode("class:\n  - fancy\n  - dark"), p("text")]);
+    processMetaFences(s);
+    expect(s.nodes).toHaveLength(1);
+    expect(s.metadata).toEqual({
+      attributes: {},
+      cssClasses: ["fancy", "dark"],
+    });
+  });
+
+  test("first-node meta-fence with mixed attrs and class", () => {
+    const s = slide([metaCode("bg: red\nclass: highlight"), h(2, "Title")]);
+    processMetaFences(s);
+    expect(s.nodes).toHaveLength(1);
+    expect(s.metadata).toEqual({
+      attributes: { "data-meta-bg": "red" },
+      cssClasses: ["highlight"],
+    });
   });
 
   test("multiple meta-fences in one slide work independently", () => {

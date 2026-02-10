@@ -7,7 +7,7 @@ describe("type definitions", () => {
     const meta: NodeMetadata = { attributes: { theme: "dark" }, cssClasses: ["intro"] };
     expect(meta.attributes["theme"]).toBe("dark");
 
-    const slide: Slide = { index: 1, nodes: [] };
+    const slide: Slide = { index: 1, nodes: [], metadata: { attributes: {}, cssClasses: [] } };
     expect(slide.index).toBe(1);
 
     const show: SlideShow = { frontMatter: meta, slides: [slide] };

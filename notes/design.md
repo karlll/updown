@@ -51,6 +51,7 @@ SlideShow
 └── slides: Slide[]
     └── Slide
         ├── index: number                 (1-based)
+        ├── metadata: NodeMetadata        (slide-level metadata from meta-fences after ---)
         └── nodes: MdastNode[]            (mdast content nodes, meta-fences already removed,
                                            metadata already attached to target nodes)
 ```
@@ -129,6 +130,7 @@ export interface NodeMetadata {
 export interface Slide {
   index: number;                       // 1-based slide number
   nodes: RootContent[];                // mdast content nodes
+  metadata: NodeMetadata;              // slide-level metadata (from meta-fences after ---)
 }
 
 /** The intermediate format passed from parser to renderer */
@@ -227,14 +229,19 @@ for i = 0 to nodes.length - 1:
     push currentSlide to slides (if it has nodes)
     slideIndex++
 
-    // Look ahead: if next node is h1/h2, let the heading handle the new slide
-    nextNode = nodes[i + 1]
-    if nextNode is heading with depth 1 or 2:
-      // Don't create a slide here; the heading iteration will create it.
-      // But we need to counteract the slideIndex++ that the heading branch will do.
-      slideIndex--
+    // Look ahead: peek past any meta-fence code blocks to find the next content node
+    peekIndex = i + 1
+    while peekIndex < nodes.length and nodes[peekIndex] is code with lang "meta":
+      peekIndex++
 
-    currentSlide = new Slide(index: slideIndex, nodes: [])
+    nextNode = nodes[peekIndex]
+    if nextNode is heading with depth 1 or 2:
+      // --- (+ optional meta-fences) + heading = one slide transition
+      // New slide starts with meta-fences (if any) then the heading
+      currentSlide = new Slide(index: slideIndex, nodes: nodes[i+1..peekIndex])
+      i = peekIndex  // skip past consumed nodes
+    else:
+      currentSlide = new Slide(index: slideIndex, nodes: [])
 
   else:
     // Regular content — append to current slide
@@ -263,7 +270,19 @@ Walks the slide's `nodes` array. When a `code` node with `lang === "meta"` is fo
 4. Remove the `code` node from the array (splice it out).
 5. Adjust the iteration index to account for the removal.
 
-**Edge case**: a meta-fence with no preceding sibling (first node in a slide) is ignored/discarded, since there is no target to attach metadata to.
+**Slide-level metadata**: a meta-fence with no preceding sibling (first node in a slide) attaches its metadata to the slide itself via `slide.metadata`. This is the mechanism for styling individual slide divs — place a meta-fence directly after a `---` divider:
+
+```markdown
+---
+```meta
+class: dark-theme
+bg: hero.jpg
+```
+
+# Welcome
+```
+
+The `---` creates a new slide. The meta-fence is the first node in that slide, so its parsed attributes (`data-meta-bg: "hero.jpg"`) and CSS classes (`dark-theme`) are stored in `slide.metadata`. The renderer applies them to the slide's wrapping `<div>`. If `---` is followed by meta-fences and then an `h1`/`h2`, only one slide transition occurs (the splitter peeks past meta-fences when detecting this pattern).
 
 ### 2.5 Renderer Implementation
 

@@ -10,6 +10,7 @@ export type NodeMetadata = {
 export type Slide = {
   index: number;
   nodes: RootContent[];
+  metadata: NodeMetadata;
 };
 
 /** The full intermediate format produced by the parser. */
