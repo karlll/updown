@@ -11,25 +11,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Runtime**: Bun (not Node.js)
 - **Language**: TypeScript (strict mode, ESNext)
 - **Parsing**: mdast library for markdown AST
+- **Syntax highlighting**: Shiki (server-side, lazily loaded languages)
 - **No external frameworks** — uses `Bun.serve()` directly, no Express/Vite
 
 ## Commands
 
 - `bun install` — install dependencies
-- `bun src/index.ts` — run the server
-- `bun --hot src/index.ts` — run with hot reload
+- `bun src/index.ts <file.md>` — run the server (press `r` to reload, `q` to quit)
+- `bun --hot src/index.ts <file.md>` — run with hot reload
 - `bun test` — run all tests
 - `bun test <file>` — run a single test file
 
 ## Architecture
 
-Three core components:
+Five core components:
 
-1. **Controller** (`src/index.ts`) — Entry point. Orchestrates parsing and rendering, serves HTML via `Bun.serve()`, provides REST API to request slides by number, injects keyboard navigation into rendered HTML.
+1. **Controller** (`src/index.ts`) — Entry point. Orchestrates parsing and rendering, serves HTML via `Bun.serve()`, provides REST API to request slides by number. Creates Shiki highlighter at startup. Supports interactive reload (`r`) and quit (`q`) via raw stdin when running in a TTY.
 
-2. **Parser** — Reads markdown input, produces an mdast AST. Handles slide separation rules, front matter extraction, and meta-fence parsing.
+2. **Parser** (`src/parser/`) — Reads markdown input, produces an mdast AST. Handles slide separation rules, front matter extraction, and meta-fence parsing.
 
-3. **Renderer** — Converts the AST into HTML output.
+3. **Renderer** (`src/renderer/`) — Converts the AST into HTML output. FenceRegistry supports pluggable renderers and Shiki syntax highlighting for code blocks with language tags.
+
+4. **Styles** (`src/styles/`) — Theme system using CSS custom properties. Built-in themes: `light`, `dark`, `catppuccin-mocha`, `catppuccin-latte`. Each theme maps to a Shiki syntax highlighting theme. Selected via front matter `theme` key.
+
+5. **Navigation** (`src/navigation/`) — Client-side keyboard navigation (ArrowLeft/ArrowRight) and auto-scaling (reduces font-size via binary search when slide content overflows the viewport).
 
 ## Bun-Specific Rules
 
@@ -54,6 +59,7 @@ Three core components:
 - YAML at the top of the markdown document, never rendered
 - Values become attributes on the `#slideshow` div, prefixed with `data-fm-`
 - Exception: `class` is passed as a regular `class` attribute (no prefix)
+- Special key: `theme` selects the color theme (`light`, `dark`, `catppuccin-mocha`, `catppuccin-latte`)
 - Arrays become space-separated strings
 - Only string, number, and flat arrays of string/number are valid types
 
@@ -65,4 +71,4 @@ Three core components:
 
 ## Pluggable Rendering
 
-Fenced code blocks can trigger external rendering (e.g., Mermaid, PlantUML). The architecture should be extensible for new renderers based on the fence identifier. Code fences render as `<div class="fence {language}"><pre>...</pre></div>`.
+Fenced code blocks can trigger external rendering (e.g., Mermaid, PlantUML). The architecture should be extensible for new renderers based on the fence identifier. Code fences with a recognized language are syntax-highlighted via Shiki (server-side). Unrecognized languages fall back to `<div class="fence {language}"><pre>...</pre></div>`. Registered plugins take priority over Shiki.
