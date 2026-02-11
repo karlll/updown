@@ -2,6 +2,7 @@ import { parse } from "./parser/index.ts";
 import { render, FenceRegistry } from "./renderer/index.ts";
 import { generateNavigationScript } from "./navigation/index.ts";
 import { generateStylesheet } from "./styles/index.ts";
+import type { RenderedSlideShow } from "./renderer/index.ts";
 
 const filePath = Bun.argv[2];
 
@@ -10,12 +11,16 @@ if (!filePath) {
   process.exit(1);
 }
 
-const markdown = await Bun.file(filePath).text();
-const slideshow = parse(markdown);
-const fenceRegistry = new FenceRegistry();
-const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
-const stylesheet = generateStylesheet(themeName);
-const rendered = render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet);
+async function loadAndRender(path: string): Promise<RenderedSlideShow> {
+  const markdown = await Bun.file(path).text();
+  const slideshow = parse(markdown);
+  const fenceRegistry = new FenceRegistry();
+  const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
+  const stylesheet = generateStylesheet(themeName);
+  return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet);
+}
+
+let rendered = await loadAndRender(filePath);
 
 const htmlHeaders = { "Content-Type": "text/html; charset=utf-8" };
 
@@ -44,4 +49,21 @@ const server = Bun.serve({
   },
 });
 
+const fileName = filePath.split("/").pop() ?? filePath;
 console.log(`updown listening on ${server.url}`);
+
+if (process.stdin.isTTY) {
+  console.log(`(r)eload ${fileName}, (q)uit`);
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  process.stdin.on("data", async (data: Buffer) => {
+    const key = data.toString();
+    if (key === "r") {
+      rendered = await loadAndRender(filePath);
+      console.log(`reloaded ${fileName}`);
+    } else if (key === "q" || key === "\x03") {
+      server.stop();
+      process.exit(0);
+    }
+  });
+}
