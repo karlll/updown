@@ -75,6 +75,7 @@ class:
 - Array values become space-separated strings.
 - Keys are added as `data-fm-` prefixed attributes on the slideshow div.
 - The `class` key is special — it becomes a regular `class` attribute (no prefix).
+- The `theme` key selects the color theme (see [Themes](#themes) below).
 
 The example above produces:
 
@@ -140,13 +141,13 @@ The meta-fence styles the slide div, the heading is the first content.
 
 ## Code Fences
 
-Fenced code blocks (other than `meta`) are rendered as:
+Fenced code blocks (other than `meta`) are rendered as HTML. If the language is recognized by Shiki, the code is syntax-highlighted with colors matching the current theme. Otherwise it falls back to plain rendering:
 
 ```html
 <div class="fence {language}"><pre>{content}</pre></div>
 ```
 
-The language identifier becomes a CSS class. Content is HTML-escaped.
+The language identifier becomes a CSS class. Content is HTML-escaped in plain mode.
 
 ---
 
@@ -166,4 +167,41 @@ The rendered HTML follows this structure:
 
 - The first slide div gets the class `first`, the last gets `last`.
 - A single-slide deck gets both `first` and `last`.
-- Navigation between slides uses ArrowLeft and ArrowRight keys.
+
+---
+
+## Themes
+
+The `theme` front matter key selects the color scheme for the slideshow. Available themes:
+
+| Theme | Description |
+|---|---|
+| `light` | Light background, dark text (default) |
+| `dark` | Dark background, light text |
+| `catppuccin-mocha` | Catppuccin dark variant |
+| `catppuccin-latte` | Catppuccin light variant |
+
+```markdown
+---
+theme: catppuccin-mocha
+---
+```
+
+Each theme applies matching colors to both the slide layout and syntax-highlighted code blocks. If the `theme` key is omitted or unrecognized, `light` is used.
+
+---
+
+## Keyboard Controls
+
+| Key | Action |
+|---|---|
+| ArrowRight | Next slide |
+| ArrowLeft | Previous slide |
+| f | Toggle fullscreen |
+| Escape | Exit fullscreen |
+
+---
+
+## Auto-Scaling
+
+Slide content is automatically scaled to fit the viewport. When content would overflow the visible area, the font size is reduced until everything fits. This applies to all text, headings, code blocks, and margins proportionally. If the content fits at the default size, no scaling is applied.
