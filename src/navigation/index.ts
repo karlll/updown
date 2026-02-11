@@ -49,6 +49,12 @@ document.addEventListener("DOMContentLoaded", function() {
       currentIndex--;
       slides[currentIndex].style.display = "";
       fitSlide(slides[currentIndex]);
+    } else if (e.key === "f") {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
     }
   });
 
