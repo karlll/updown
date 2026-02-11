@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { FenceRegistry } from "../../src/renderer/fence.ts";
+import type { Highlighter } from "../../src/renderer/fence.ts";
 
 describe("FenceRegistry", () => {
   test("unregistered language produces default rendering", () => {
@@ -70,5 +71,57 @@ describe("FenceRegistry", () => {
     const reg = new FenceRegistry();
     const html = reg.render("js", "let x = 'hello'");
     expect(html).toContain("&#x27;");
+  });
+});
+
+describe("FenceRegistry with highlighter", () => {
+  function mockHighlighter(supportedLangs: string[]): Highlighter {
+    return {
+      getLoadedLanguages: () => supportedLangs,
+      codeToHtml: (code, opts) =>
+        `<pre class="shiki ${opts.theme}"><code>${code}</code></pre>`,
+    };
+  }
+
+  test("uses highlighter for known language", () => {
+    const reg = new FenceRegistry();
+    reg.setHighlighter(mockHighlighter(["typescript"]), "catppuccin-mocha");
+    const html = reg.render("typescript", "const x = 1");
+    expect(html).toContain('class="fence typescript"');
+    expect(html).toContain('class="shiki catppuccin-mocha"');
+    expect(html).toContain("const x = 1");
+  });
+
+  test("falls back to plain rendering for unknown language", () => {
+    const reg = new FenceRegistry();
+    reg.setHighlighter(mockHighlighter(["typescript"]), "catppuccin-mocha");
+    const html = reg.render("brainfuck", "++++++++++");
+    expect(html).toBe('<div class="fence brainfuck"><pre>++++++++++</pre></div>');
+  });
+
+  test("falls back to plain rendering for no language", () => {
+    const reg = new FenceRegistry();
+    reg.setHighlighter(mockHighlighter(["typescript"]), "catppuccin-mocha");
+    const html = reg.render(null, "plain text");
+    expect(html).toBe('<div class="fence"><pre>plain text</pre></div>');
+  });
+
+  test("plugins take priority over highlighter", () => {
+    const reg = new FenceRegistry();
+    reg.setHighlighter(mockHighlighter(["mermaid"]), "catppuccin-mocha");
+    reg.register({
+      lang: "mermaid",
+      render(content) {
+        return `<div class="mermaid">${content}</div>`;
+      },
+    });
+    const html = reg.render("mermaid", "graph LR");
+    expect(html).toBe('<div class="mermaid">graph LR</div>');
+  });
+
+  test("no highlighter set uses plain rendering", () => {
+    const reg = new FenceRegistry();
+    const html = reg.render("typescript", "const x = 1");
+    expect(html).toBe('<div class="fence typescript"><pre>const x = 1</pre></div>');
   });
 });

@@ -9,8 +9,20 @@ function escapeHtml(str: string): string {
     .replaceAll("'", "&#x27;");
 }
 
+export type Highlighter = {
+  codeToHtml(code: string, options: { lang: string; theme: string }): string;
+  getLoadedLanguages(): string[];
+};
+
 export class FenceRegistry {
   private plugins: Map<string, FencePlugin> = new Map();
+  private highlighter: Highlighter | null = null;
+  private shikiTheme: string | null = null;
+
+  setHighlighter(highlighter: Highlighter, theme: string): void {
+    this.highlighter = highlighter;
+    this.shikiTheme = theme;
+  }
 
   register(plugin: FencePlugin): void {
     this.plugins.set(plugin.lang, plugin);
@@ -21,6 +33,18 @@ export class FenceRegistry {
       const plugin = this.plugins.get(lang);
       if (plugin) {
         return plugin.render(content);
+      }
+    }
+
+    // Try Shiki highlighting for known languages
+    if (lang && this.highlighter && this.shikiTheme) {
+      const loaded = this.highlighter.getLoadedLanguages();
+      if (loaded.includes(lang)) {
+        const highlighted = this.highlighter.codeToHtml(content, {
+          lang,
+          theme: this.shikiTheme,
+        });
+        return `<div class="fence ${escapeHtml(lang)}">${highlighted}</div>`;
       }
     }
 

@@ -1,8 +1,11 @@
 import { parse } from "./parser/index.ts";
 import { render, FenceRegistry } from "./renderer/index.ts";
 import { generateNavigationScript } from "./navigation/index.ts";
-import { generateStylesheet } from "./styles/index.ts";
+import { generateStylesheet, themes, defaultTheme } from "./styles/index.ts";
+import { createHighlighter, bundledLanguages } from "shiki";
 import type { RenderedSlideShow } from "./renderer/index.ts";
+import type { Highlighter } from "./renderer/fence.ts";
+import type { BundledLanguage } from "shiki";
 
 const filePath = Bun.argv[2];
 
@@ -11,11 +14,36 @@ if (!filePath) {
   process.exit(1);
 }
 
+const shikiThemes = Object.values(themes).map((t) => t.shikiTheme);
+const highlighter = await createHighlighter({
+  themes: shikiThemes,
+  langs: [],
+});
+
 async function loadAndRender(path: string): Promise<RenderedSlideShow> {
   const markdown = await Bun.file(path).text();
   const slideshow = parse(markdown);
-  const fenceRegistry = new FenceRegistry();
+
+  // Collect code fence languages and load any missing ones into Shiki
+  const loaded = new Set(highlighter.getLoadedLanguages());
+  const needed = new Set<string>();
+  for (const slide of slideshow.slides) {
+    for (const node of slide.nodes) {
+      if (node.type === "code" && node.lang && !loaded.has(node.lang)) {
+        if (node.lang in bundledLanguages) {
+          needed.add(node.lang);
+        }
+      }
+    }
+  }
+  if (needed.size > 0) {
+    await highlighter.loadLanguage(...[...needed] as BundledLanguage[]);
+  }
+
   const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
+  const theme = themes[themeName ?? defaultTheme] ?? themes[defaultTheme]!;
+  const fenceRegistry = new FenceRegistry();
+  fenceRegistry.setHighlighter(highlighter, theme.shikiTheme);
   const stylesheet = generateStylesheet(themeName);
   return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet);
 }
