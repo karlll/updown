@@ -1,6 +1,7 @@
 import { parse } from "./parser/index.ts";
 import { render, FenceRegistry } from "./renderer/index.ts";
 import { generateNavigationScript } from "./navigation/index.ts";
+import { generateStylesheet } from "./styles/index.ts";
 
 const filePath = Bun.argv[2];
 
@@ -12,7 +13,9 @@ if (!filePath) {
 const markdown = await Bun.file(filePath).text();
 const slideshow = parse(markdown);
 const fenceRegistry = new FenceRegistry();
-const rendered = render(slideshow, fenceRegistry, generateNavigationScript());
+const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
+const stylesheet = generateStylesheet(themeName);
+const rendered = render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet);
 
 const htmlHeaders = { "Content-Type": "text/html; charset=utf-8" };
 

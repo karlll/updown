@@ -16,6 +16,7 @@ export function render(
   slideshow: SlideShow,
   fenceRegistry: FenceRegistry,
   navigationScript?: string,
+  stylesheet?: string,
 ): RenderedSlideShow {
   const slideFragments = new Map<number, string>();
   const slideCount = slideshow.slides.length;
@@ -47,12 +48,14 @@ export function render(
 
   const slideshowHtml = `<div id="slideshow"${fmClassAttr}${fmAttrs}>${slideDivs.join("")}</div>`;
   const scriptTag = navigationScript ? `<script>${navigationScript}</script>` : "";
+  const styleTag = stylesheet ? `<style>${stylesheet}</style>` : "";
 
   const fullDocument = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>updown</title>
+${styleTag}
 </head>
 <body>
 ${slideshowHtml}
