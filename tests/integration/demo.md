@@ -1,10 +1,10 @@
 ---
-theme: demo
 author: updown
 version: 1
 class:
   - presentation
   - widescreen
+theme: catppuccin-mocha
 ---
 
 # Welcome to updown
@@ -93,6 +93,14 @@ Here is a paragraph with **bold**, *italic*, `code`, and a [link](http://example
 ![Placeholder image](https://via.placeholder.com/300x200)
 
 Another paragraph below the image.
+
+---
+
+## Excalidraw Diagram
+
+![Architecture sketch](../renderer/excalidraw/test.excalidraw)
+
+Excalidraw drawings are rendered as inline SVG.
 
 ---
 

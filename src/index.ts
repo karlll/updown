@@ -2,10 +2,13 @@ import { parse } from "./parser/index.ts";
 import { render, FenceRegistry } from "./renderer/index.ts";
 import { generateNavigationScript } from "./navigation/index.ts";
 import { generateStylesheet, themes, defaultTheme } from "./styles/index.ts";
+import { renderExcalidraw } from "./excalidraw/index.ts";
 import { createHighlighter, bundledLanguages } from "shiki";
+import type { RootContent, PhrasingContent } from "mdast";
 import type { RenderedSlideShow } from "./renderer/index.ts";
 import type { Highlighter } from "./renderer/fence.ts";
 import type { BundledLanguage } from "shiki";
+import { resolve, dirname } from "node:path";
 
 const filePath = Bun.argv[2];
 
@@ -40,12 +43,38 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
     await highlighter.loadLanguage(...[...needed] as BundledLanguage[]);
   }
 
+  // Collect .excalidraw image URLs and render them to SVG
+  const mdDir = dirname(resolve(path));
+  const excalidrawUrls = new Set<string>();
+  for (const slide of slideshow.slides) {
+    for (const node of slide.nodes) {
+      collectExcalidrawUrls(node, excalidrawUrls);
+    }
+  }
+  const excalidrawSvgs = new Map<string, string>();
+  for (const url of excalidrawUrls) {
+    const absPath = resolve(mdDir, url);
+    excalidrawSvgs.set(url, await renderExcalidraw(absPath));
+  }
+
   const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
   const theme = themes[themeName ?? defaultTheme] ?? themes[defaultTheme]!;
   const fenceRegistry = new FenceRegistry();
   fenceRegistry.setHighlighter(highlighter, theme.shikiTheme);
   const stylesheet = generateStylesheet(themeName);
-  return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet);
+  return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet, excalidrawSvgs);
+}
+
+function collectExcalidrawUrls(node: RootContent | PhrasingContent, urls: Set<string>): void {
+  if (node.type === "image" && node.url.endsWith(".excalidraw")) {
+    urls.add(node.url);
+    return;
+  }
+  if ("children" in node) {
+    for (const child of node.children as (RootContent | PhrasingContent)[]) {
+      collectExcalidrawUrls(child, urls);
+    }
+  }
 }
 
 let rendered = await loadAndRender(filePath);

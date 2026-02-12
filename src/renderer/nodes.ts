@@ -28,22 +28,28 @@ function metaAttrs(node: { data?: Record<string, unknown> }): string {
   return parts.length > 0 ? ` ${parts.join(" ")}` : "";
 }
 
-function renderInline(node: PhrasingContent, reg: FenceRegistry): string {
+function renderInline(node: PhrasingContent, reg: FenceRegistry, svgMap?: Map<string, string>): string {
   switch (node.type) {
     case "text":
       return escapeHtml(node.value);
     case "emphasis":
-      return `<em>${node.children.map((c) => renderInline(c, reg)).join("")}</em>`;
+      return `<em>${node.children.map((c) => renderInline(c, reg, svgMap)).join("")}</em>`;
     case "strong":
-      return `<strong>${node.children.map((c) => renderInline(c, reg)).join("")}</strong>`;
+      return `<strong>${node.children.map((c) => renderInline(c, reg, svgMap)).join("")}</strong>`;
     case "delete":
-      return `<del>${node.children.map((c) => renderInline(c, reg)).join("")}</del>`;
+      return `<del>${node.children.map((c) => renderInline(c, reg, svgMap)).join("")}</del>`;
     case "inlineCode":
       return `<code>${escapeHtml(node.value)}</code>`;
     case "link":
-      return `<a href="${escapeHtml(node.url)}">${node.children.map((c) => renderInline(c, reg)).join("")}</a>`;
-    case "image":
+      return `<a href="${escapeHtml(node.url)}">${node.children.map((c) => renderInline(c, reg, svgMap)).join("")}</a>`;
+    case "image": {
+      const svg = svgMap?.get(node.url);
+      if (svg) {
+        const alt = node.alt ? ` aria-label="${escapeHtml(node.alt)}"` : "";
+        return `<span class="excalidraw-embed"${alt}>${svg}</span>`;
+      }
       return `<img src="${escapeHtml(node.url)}" alt="${escapeHtml(node.alt ?? "")}">`;
+    }
     case "break":
       return "<br>";
     case "html":
@@ -53,31 +59,31 @@ function renderInline(node: PhrasingContent, reg: FenceRegistry): string {
   }
 }
 
-function renderTableRow(row: TableRow, cellTag: "th" | "td", reg: FenceRegistry): string {
+function renderTableRow(row: TableRow, cellTag: "th" | "td", reg: FenceRegistry, svgMap?: Map<string, string>): string {
   const cells = row.children
     .map((cell) => {
-      const content = cell.children.map((c) => renderInline(c, reg)).join("");
+      const content = cell.children.map((c) => renderInline(c, reg, svgMap)).join("");
       return `<${cellTag}>${content}</${cellTag}>`;
     })
     .join("");
   return `<tr>${cells}</tr>`;
 }
 
-export function renderNode(node: RootContent, reg: FenceRegistry): string {
+export function renderNode(node: RootContent, reg: FenceRegistry, svgMap?: Map<string, string>): string {
   const attrs = metaAttrs(node as { data?: Record<string, unknown> });
 
   switch (node.type) {
     case "heading": {
       const tag = `h${node.depth}`;
-      const children = node.children.map((c) => renderInline(c, reg)).join("");
+      const children = node.children.map((c) => renderInline(c, reg, svgMap)).join("");
       return `<${tag}${attrs}>${children}</${tag}>`;
     }
     case "paragraph": {
-      const children = node.children.map((c) => renderInline(c, reg)).join("");
+      const children = node.children.map((c) => renderInline(c, reg, svgMap)).join("");
       return `<p${attrs}>${children}</p>`;
     }
     case "blockquote": {
-      const children = node.children.map((c) => renderNode(c, reg)).join("");
+      const children = node.children.map((c) => renderNode(c, reg, svgMap)).join("");
       return `<blockquote${attrs}>${children}</blockquote>`;
     }
     case "list": {
@@ -86,10 +92,10 @@ export function renderNode(node: RootContent, reg: FenceRegistry): string {
         const itemAttrs = metaAttrs(item as { data?: Record<string, unknown> });
         // Unwrap single-paragraph children
         if (item.children.length === 1 && item.children[0]!.type === "paragraph") {
-          const content = item.children[0]!.children.map((c) => renderInline(c, reg)).join("");
+          const content = item.children[0]!.children.map((c) => renderInline(c, reg, svgMap)).join("");
           return `<li${itemAttrs}>${content}</li>`;
         }
-        const content = item.children.map((c) => renderNode(c, reg)).join("");
+        const content = item.children.map((c) => renderNode(c, reg, svgMap)).join("");
         return `<li${itemAttrs}>${content}</li>`;
       }).join("");
       return `<${tag}${attrs}>${children}</${tag}>`;
@@ -98,10 +104,10 @@ export function renderNode(node: RootContent, reg: FenceRegistry): string {
       const [headRow, ...bodyRows] = node.children;
       let html = `<table${attrs}>`;
       if (headRow) {
-        html += `<thead>${renderTableRow(headRow, "th", reg)}</thead>`;
+        html += `<thead>${renderTableRow(headRow, "th", reg, svgMap)}</thead>`;
       }
       if (bodyRows.length > 0) {
-        html += `<tbody>${bodyRows.map((r) => renderTableRow(r, "td", reg)).join("")}</tbody>`;
+        html += `<tbody>${bodyRows.map((r) => renderTableRow(r, "td", reg, svgMap)).join("")}</tbody>`;
       }
       html += "</table>";
       return html;

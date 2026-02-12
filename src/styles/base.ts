@@ -127,6 +127,11 @@ img {
   border-radius: 8px;
 }
 
+.excalidraw-embed svg {
+  max-width: 100%;
+  height: auto;
+}
+
 em { font-style: italic; }
 strong { font-weight: 700; }
 `.trim();

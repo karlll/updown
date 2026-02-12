@@ -17,13 +17,14 @@ export function render(
   fenceRegistry: FenceRegistry,
   navigationScript?: string,
   stylesheet?: string,
+  excalidrawSvgs?: Map<string, string>,
 ): RenderedSlideShow {
   const slideFragments = new Map<number, string>();
   const slideCount = slideshow.slides.length;
   const slideDivs: string[] = [];
 
   for (const slide of slideshow.slides) {
-    const innerHtml = slide.nodes.map((n) => renderNode(n, fenceRegistry)).join("");
+    const innerHtml = slide.nodes.map((n) => renderNode(n, fenceRegistry, excalidrawSvgs)).join("");
     slideFragments.set(slide.index, innerHtml);
 
     const classes: string[] = ["slide"];
