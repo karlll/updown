@@ -151,6 +151,20 @@ The language identifier becomes a CSS class. Content is HTML-escaped in plain mo
 
 ---
 
+## Excalidraw Diagrams
+
+Images referencing `.excalidraw` files are rendered as inline SVG, with Excalidraw's fonts embedded:
+
+```markdown
+![Architecture diagram](./diagrams/arch.excalidraw)
+```
+
+The path is resolved relative to the markdown file. The alt text becomes an `aria-label` on the embedding element. If the file is missing or contains invalid JSON, an error message is shown in the slide.
+
+Regular images (`.png`, `.jpg`, etc.) continue to render as normal `<img>` tags.
+
+---
+
 ## Slide Structure
 
 The rendered HTML follows this structure:

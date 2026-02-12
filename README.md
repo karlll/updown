@@ -24,4 +24,4 @@ Then open `http://localhost:3000` and navigate slides with **ArrowLeft** / **Arr
 
 ## Slide Format
 
-See [FORMAT.md](FORMAT.md) for the full format reference covering slide creation, front matter, meta-fences, and code blocks.
+See [FORMAT.md](FORMAT.md) for the full format reference covering slide creation, front matter, meta-fences, code blocks, and Excalidraw diagrams.

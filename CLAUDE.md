@@ -12,6 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Language**: TypeScript (strict mode, ESNext)
 - **Parsing**: mdast library for markdown AST
 - **Syntax highlighting**: Shiki (server-side, lazily loaded languages)
+- **Excalidraw**: `@excalidraw/utils` + `happy-dom` for server-side SVG export
 - **No external frameworks** — uses `Bun.serve()` directly, no Express/Vite
 
 ## Commands
@@ -24,17 +25,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture
 
-Five core components:
+Six core components:
 
-1. **Controller** (`src/index.ts`) — Entry point. Orchestrates parsing and rendering, serves HTML via `Bun.serve()`, provides REST API to request slides by number. Creates Shiki highlighter at startup. Supports interactive reload (`r`) and quit (`q`) via raw stdin when running in a TTY.
+1. **Controller** (`src/index.ts`) — Entry point. Orchestrates parsing and rendering, serves HTML via `Bun.serve()`, provides REST API to request slides by number. Creates Shiki highlighter at startup. Pre-processes Excalidraw images before rendering. Supports interactive reload (`r`) and quit (`q`) via raw stdin when running in a TTY.
 
 2. **Parser** (`src/parser/`) — Reads markdown input, produces an mdast AST. Handles slide separation rules, front matter extraction, and meta-fence parsing.
 
-3. **Renderer** (`src/renderer/`) — Converts the AST into HTML output. FenceRegistry supports pluggable renderers and Shiki syntax highlighting for code blocks with language tags.
+3. **Renderer** (`src/renderer/`) — Converts the AST into HTML output. FenceRegistry supports pluggable renderers and Shiki syntax highlighting for code blocks with language tags. Image nodes referencing `.excalidraw` files are replaced with pre-rendered inline SVG.
 
 4. **Styles** (`src/styles/`) — Theme system using CSS custom properties. Built-in themes: `light`, `dark`, `catppuccin-mocha`, `catppuccin-latte`. Each theme maps to a Shiki syntax highlighting theme. Selected via front matter `theme` key.
 
 5. **Navigation** (`src/navigation/`) — Client-side keyboard navigation (ArrowLeft/ArrowRight) and auto-scaling (reduces font-size via binary search when slide content overflows the viewport).
+
+6. **Excalidraw** (`src/excalidraw/`) — Server-side rendering of `.excalidraw` files to inline SVG via `@excalidraw/utils`. Uses a `happy-dom` shim for DOM globals. Fonts are subsetted and inlined as base64 data URLs.
 
 ## Bun-Specific Rules
 
