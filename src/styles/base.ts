@@ -130,6 +130,7 @@ img {
 .excalidraw-embed svg {
   max-width: 100%;
   height: auto;
+  filter: var(--excalidraw-filter, none);
 }
 
 em { font-style: italic; }

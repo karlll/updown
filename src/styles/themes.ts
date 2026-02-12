@@ -23,6 +23,7 @@ const light: Theme = {
     "--table-border": "#d0d0da",
     "--table-header-bg": "#f0f0f5",
     "--hr-color": "#d0d0da",
+    "--excalidraw-filter": "none",
   },
 };
 
@@ -45,6 +46,7 @@ const dark: Theme = {
     "--table-border": "#3b3b5c",
     "--table-header-bg": "#24243e",
     "--hr-color": "#3b3b5c",
+    "--excalidraw-filter": "invert(1) hue-rotate(180deg)",
   },
 };
 
@@ -67,6 +69,7 @@ const catppuccinMocha: Theme = {
     "--table-border": "#45475a",
     "--table-header-bg": "#313244",
     "--hr-color": "#45475a",
+    "--excalidraw-filter": "invert(1) hue-rotate(180deg)",
   },
 };
 
@@ -89,6 +92,7 @@ const catppuccinLatte: Theme = {
     "--table-border": "#ccd0da",
     "--table-header-bg": "#e6e9ef",
     "--hr-color": "#ccd0da",
+    "--excalidraw-filter": "none",
   },
 };
 

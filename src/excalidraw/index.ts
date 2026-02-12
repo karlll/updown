@@ -23,7 +23,7 @@ export async function renderExcalidraw(filePath: string): Promise<string> {
   const svg = await exportToSvg({
     elements: elements as any,
     files: (data.files ?? null) as any,
-    appState: data.appState as any,
+    appState: { ...data.appState, viewBackgroundColor: "transparent" } as any,
     exportPadding: 10,
   });
 
