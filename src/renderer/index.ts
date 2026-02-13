@@ -18,6 +18,7 @@ export function render(
   navigationScript?: string,
   stylesheet?: string,
   excalidrawSvgs?: Map<string, string>,
+  mermaidScript?: string,
 ): RenderedSlideShow {
   const slideFragments = new Map<number, string>();
   const slideCount = slideshow.slides.length;
@@ -50,6 +51,9 @@ export function render(
   const slideshowHtml = `<div id="slideshow"${fmClassAttr}${fmAttrs}>${slideDivs.join("")}</div>`;
   const scriptTag = navigationScript ? `<script>${navigationScript}</script>` : "";
   const styleTag = stylesheet ? `<style>${stylesheet}</style>` : "";
+  const mermaidTags = mermaidScript
+    ? `<script src="/assets/mermaid.min.js"></script>\n<script>${mermaidScript}</script>`
+    : "";
 
   const fullDocument = `<!DOCTYPE html>
 <html>
@@ -60,6 +64,7 @@ ${styleTag}
 </head>
 <body>
 ${slideshowHtml}
+${mermaidTags}
 ${scriptTag}
 </body>
 </html>`;

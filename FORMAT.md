@@ -165,6 +165,25 @@ Regular images (`.png`, `.jpg`, etc.) continue to render as normal `<img>` tags.
 
 ---
 
+## Mermaid Diagrams
+
+Fenced code blocks with the language `mermaid` are rendered as diagrams in the browser:
+
+````markdown
+```mermaid
+graph LR
+    A[Markdown] --> B[Parser]
+    B --> C[Renderer]
+    C --> D[HTML]
+```
+````
+
+All diagram types supported by MermaidJS work — flowcharts, sequence diagrams, class diagrams, state diagrams, etc. The diagram theme automatically matches the slideshow theme (light themes use mermaid's "default" theme, dark themes use "dark").
+
+The mermaid library is only loaded when the document contains mermaid code fences.
+
+---
+
 ## Slide Structure
 
 The rendered HTML follows this structure:

@@ -4,7 +4,7 @@ version: 1
 class:
   - presentation
   - widescreen
-theme: catppuccin-latte
+theme: catppuccin-mocha
 ---
 
 # Welcome to updown
@@ -93,6 +93,18 @@ Here is a paragraph with **bold**, *italic*, `code`, and a [link](http://example
 ![Placeholder image](https://via.placeholder.com/300x200)
 
 Another paragraph below the image.
+
+---
+
+## Mermaid Diagram
+
+```mermaid
+graph LR
+    A[Markdown] --> B[Parser]
+    B --> C[AST]
+    C --> D[Renderer]
+    D --> E[HTML Slideshow]
+```
 
 ---
 

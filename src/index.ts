@@ -3,12 +3,15 @@ import { render, FenceRegistry } from "./renderer/index.ts";
 import { generateNavigationScript } from "./navigation/index.ts";
 import { generateStylesheet, themes, defaultTheme } from "./styles/index.ts";
 import { renderExcalidraw } from "./excalidraw/index.ts";
+import { generateMermaidScript } from "./mermaid/index.ts";
 import { createHighlighter, bundledLanguages } from "shiki";
 import type { RootContent, PhrasingContent } from "mdast";
 import type { RenderedSlideShow } from "./renderer/index.ts";
 import type { Highlighter } from "./renderer/fence.ts";
 import type { BundledLanguage } from "shiki";
 import { resolve, dirname } from "node:path";
+// @ts-ignore — Bun text import
+import mermaidClientJs from "mermaid/dist/mermaid.min.js" with { type: "text" };
 
 const filePath = Bun.argv[2];
 
@@ -59,10 +62,32 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
 
   const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
   const theme = themes[themeName ?? defaultTheme] ?? themes[defaultTheme]!;
+
+  // Detect mermaid code blocks and register client-side rendering plugin
+  let hasMermaid = false;
+  for (const slide of slideshow.slides) {
+    for (const node of slide.nodes) {
+      if (node.type === "code" && node.lang === "mermaid") {
+        hasMermaid = true;
+        break;
+      }
+    }
+    if (hasMermaid) break;
+  }
+
   const fenceRegistry = new FenceRegistry();
   fenceRegistry.setHighlighter(highlighter, theme.shikiTheme);
+  if (hasMermaid) {
+    fenceRegistry.register({
+      lang: "mermaid",
+      render(content) {
+        return `<div class="fence fence-mermaid"><pre class="mermaid">${content}</pre></div>`;
+      },
+    });
+  }
+  const mermaidScript = hasMermaid ? generateMermaidScript(theme.mermaidTheme) : undefined;
   const stylesheet = generateStylesheet(themeName);
-  return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet, excalidrawSvgs);
+  return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet, excalidrawSvgs, mermaidScript);
 }
 
 function collectExcalidrawUrls(node: RootContent | PhrasingContent, urls: Set<string>): void {
@@ -90,6 +115,12 @@ const server = Bun.serve({
 
     if (url.pathname === "/") {
       return new Response(rendered.fullDocument, { headers: htmlHeaders });
+    }
+
+    if (url.pathname === "/assets/mermaid.min.js") {
+      return new Response(mermaidClientJs, {
+        headers: { "Content-Type": "application/javascript" },
+      });
     }
 
     const slideMatch = url.pathname.match(/^\/slide\/(\d+)$/);

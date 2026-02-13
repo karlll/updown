@@ -133,6 +133,11 @@ img {
   filter: var(--excalidraw-filter, none);
 }
 
+.fence-mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
 em { font-style: italic; }
 strong { font-weight: 700; }
 `.trim();

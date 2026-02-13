@@ -1,12 +1,14 @@
 export type Theme = {
   name: string;
   shikiTheme: string;
+  mermaidTheme: "default" | "dark";
   variables: Record<string, string>;
 };
 
 const light: Theme = {
   name: "light",
   shikiTheme: "github-light",
+  mermaidTheme: "default",
   variables: {
     "--bg": "#ffffff",
     "--fg": "#1a1a2e",
@@ -30,6 +32,7 @@ const light: Theme = {
 const dark: Theme = {
   name: "dark",
   shikiTheme: "github-dark",
+  mermaidTheme: "dark",
   variables: {
     "--bg": "#1a1a2e",
     "--fg": "#e0e0e8",
@@ -53,6 +56,7 @@ const dark: Theme = {
 const catppuccinMocha: Theme = {
   name: "catppuccin-mocha",
   shikiTheme: "catppuccin-mocha",
+  mermaidTheme: "dark",
   variables: {
     "--bg": "#1e1e2e",
     "--fg": "#cdd6f4",
@@ -76,6 +80,7 @@ const catppuccinMocha: Theme = {
 const catppuccinLatte: Theme = {
   name: "catppuccin-latte",
   shikiTheme: "catppuccin-latte",
+  mermaidTheme: "default",
   variables: {
     "--bg": "#eff1f5",
     "--fg": "#4c4f69",
