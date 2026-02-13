@@ -3,6 +3,10 @@
   "module": "src/index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "build": "bun build src/index.ts --target=bun --minify --outdir=dist",
+    "build-standalone": "bun build src/index.ts --compile --minify --outfile=dist/updown"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/mdast": "^4.0.4",
