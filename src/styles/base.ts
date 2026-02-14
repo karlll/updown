@@ -138,6 +138,11 @@ img {
   height: auto;
 }
 
+.fence-plantuml svg {
+  max-width: 100%;
+  height: auto;
+}
+
 em { font-style: italic; }
 strong { font-weight: 700; }
 `.trim();

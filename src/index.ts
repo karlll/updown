@@ -4,6 +4,9 @@ import { generateNavigationScript } from "./navigation/index.ts";
 import { generateStylesheet, themes, defaultTheme } from "./styles/index.ts";
 import { renderExcalidraw } from "./excalidraw/index.ts";
 import { generateMermaidScript } from "./mermaid/index.ts";
+import { startPlantUMLServer } from "./plantuml/server.ts";
+import { generatePlantUMLScript } from "./plantuml/client.ts";
+import type { PlantUMLServer } from "./plantuml/server.ts";
 import { createHighlighter, bundledLanguages } from "shiki";
 import type { RootContent, PhrasingContent } from "mdast";
 import type { RenderedSlideShow } from "./renderer/index.ts";
@@ -19,6 +22,8 @@ if (!filePath) {
   console.error("Usage: bun src/index.ts <path-to-markdown-file>");
   process.exit(1);
 }
+
+let plantumlServer: PlantUMLServer | null = null;
 
 const shikiThemes = Object.values(themes).map((t) => t.shikiTheme);
 const highlighter = await createHighlighter({
@@ -63,16 +68,16 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
   const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
   const theme = themes[themeName ?? defaultTheme] ?? themes[defaultTheme]!;
 
-  // Detect mermaid code blocks and register client-side rendering plugin
+  // Detect mermaid and plantuml code blocks
   let hasMermaid = false;
+  let hasPlantUML = false;
   for (const slide of slideshow.slides) {
     for (const node of slide.nodes) {
-      if (node.type === "code" && node.lang === "mermaid") {
-        hasMermaid = true;
-        break;
-      }
+      if (node.type === "code" && node.lang === "mermaid") hasMermaid = true;
+      if (node.type === "code" && node.lang === "plantuml") hasPlantUML = true;
+      if (hasMermaid && hasPlantUML) break;
     }
-    if (hasMermaid) break;
+    if (hasMermaid && hasPlantUML) break;
   }
 
   const fenceRegistry = new FenceRegistry();
@@ -85,9 +90,21 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
       },
     });
   }
+  if (hasPlantUML) {
+    if (!plantumlServer) {
+      plantumlServer = await startPlantUMLServer();
+    }
+    fenceRegistry.register({
+      lang: "plantuml",
+      render(content) {
+        return `<div class="fence fence-plantuml"><pre class="plantuml">${content}</pre></div>`;
+      },
+    });
+  }
   const mermaidScript = hasMermaid ? generateMermaidScript(theme.mermaidTheme) : undefined;
+  const plantumlScript = hasPlantUML ? generatePlantUMLScript() : undefined;
   const stylesheet = generateStylesheet(themeName);
-  return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet, excalidrawSvgs, mermaidScript);
+  return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet, excalidrawSvgs, mermaidScript, plantumlScript);
 }
 
 function collectExcalidrawUrls(node: RootContent | PhrasingContent, urls: Set<string>): void {
@@ -110,7 +127,7 @@ const port = parseInt(process.env.PORT ?? "3000", 10);
 
 const server = Bun.serve({
   port,
-  fetch(req) {
+  async fetch(req) {
     const url = new URL(req.url);
 
     if (url.pathname === "/") {
@@ -120,6 +137,19 @@ const server = Bun.serve({
     if (url.pathname === "/assets/mermaid.min.js") {
       return new Response(mermaidClientJs, {
         headers: { "Content-Type": "application/javascript" },
+      });
+    }
+
+    if (url.pathname === "/plantuml/render" && req.method === "POST" && plantumlServer) {
+      const body = await req.json();
+      const res = await fetch(`http://127.0.0.1:${plantumlServer.port}/render`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      return new Response(await res.text(), {
+        status: res.status,
+        headers: { "Content-Type": res.headers.get("Content-Type") ?? "image/svg+xml" },
       });
     }
 
@@ -137,6 +167,8 @@ const server = Bun.serve({
   },
 });
 
+process.on("exit", () => plantumlServer?.stop());
+
 const fileName = filePath.split("/").pop() ?? filePath;
 console.log(`updown listening on ${server.url}`);
 
@@ -150,6 +182,7 @@ if (process.stdin.isTTY) {
       rendered = await loadAndRender(filePath);
       console.log(`reloaded ${fileName}`);
     } else if (key === "q" || key === "\x03") {
+      plantumlServer?.stop();
       server.stop();
       process.exit(0);
     }

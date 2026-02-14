@@ -184,6 +184,25 @@ The mermaid library is only loaded when the document contains mermaid code fence
 
 ---
 
+## PlantUML Diagrams
+
+Fenced code blocks with the language `plantuml` are rendered as diagrams via a local PlantUML server:
+
+````markdown
+```plantuml
+@startuml
+Alice -> Bob: Hello
+Bob --> Alice: Hi there
+@enduml
+```
+````
+
+A PlantUML server is started automatically when the document contains plantuml code fences. The server requires Java and the PlantUML JAR file (defaults to `tools/plantuml/plantuml.jar`, overridable via `PLANTUML_JAR` env var). The server port defaults to 18123 (overridable via `PLANTUML_PORT`).
+
+All diagram types supported by PlantUML work — sequence diagrams, class diagrams, activity diagrams, component diagrams, etc.
+
+---
+
 ## Slide Structure
 
 The rendered HTML follows this structure:

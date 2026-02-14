@@ -116,6 +116,24 @@ Excalidraw drawings are rendered as inline SVG.
 
 ---
 
+## PlantUML Diagram
+
+```plantuml
+@startuml
+actor User
+participant "updown" as App
+participant "PlantUML Server" as PU
+
+User -> App: Write markdown
+App -> App: Parse slides
+App -> PU: POST /render (source)
+PU --> App: SVG diagram
+App --> User: HTML slideshow
+@enduml
+```
+
+---
+
 ```meta
 class: closing
 ```

@@ -19,6 +19,7 @@ export function render(
   stylesheet?: string,
   excalidrawSvgs?: Map<string, string>,
   mermaidScript?: string,
+  plantumlScript?: string,
 ): RenderedSlideShow {
   const slideFragments = new Map<number, string>();
   const slideCount = slideshow.slides.length;
@@ -54,6 +55,7 @@ export function render(
   const mermaidTags = mermaidScript
     ? `<script src="/assets/mermaid.min.js"></script>\n<script>${mermaidScript}</script>`
     : "";
+  const plantumlTag = plantumlScript ? `<script>${plantumlScript}</script>` : "";
 
   const fullDocument = `<!DOCTYPE html>
 <html>
@@ -65,6 +67,7 @@ ${styleTag}
 <body>
 ${slideshowHtml}
 ${mermaidTags}
+${plantumlTag}
 ${scriptTag}
 </body>
 </html>`;
