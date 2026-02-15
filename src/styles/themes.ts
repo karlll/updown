@@ -492,6 +492,23 @@ pre {
   box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.4);
 }
 
+.slide.first::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #3b3055;
+  -webkit-mask-image: url(/assets/synthwave-stencil.png);
+  mask-image: url(/assets/synthwave-stencil.png);
+  -webkit-mask-size: 95%;
+  mask-size: 95%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.3;
+}
+
 .slide::after {
   content: "";
   position: absolute;

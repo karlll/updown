@@ -161,6 +161,14 @@ const server = Bun.serve({
       });
     }
 
+    if (url.pathname.startsWith("/assets/")) {
+      const assetPath = resolve(import.meta.dir, "..", url.pathname.slice(1));
+      const file = Bun.file(assetPath);
+      if (await file.exists()) {
+        return new Response(file);
+      }
+    }
+
     if (url.pathname === "/plantuml/render" && req.method === "POST" && plantumlServer) {
       const body = await req.json();
       const res = await fetch(`http://127.0.0.1:${plantumlServer.port}/render`, {
