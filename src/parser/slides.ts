@@ -79,19 +79,15 @@ export function splitIntoSlides(nodes: RootContent[]): Slide[] {
     slides.push({ index: slides.length + 1, nodes: current, metadata: emptyMetadata() });
   }
 
-  // Second pass: extract column breaks within each slide
-  for (const slide of slides) {
-    extractColumns(slide);
-  }
-
   return slides;
 }
 
 /**
  * If a slide contains `+++` column breaks, split into preamble (headings)
  * kept in `slide.nodes` and column groups stored in `slide.columns`.
+ * Must run after processMetaFences so that meta-fences are consumed first.
  */
-function extractColumns(slide: Slide): void {
+export function extractColumns(slide: Slide): void {
   const breakIndices: number[] = [];
   for (let i = 0; i < slide.nodes.length; i++) {
     if (isColumnBreak(slide.nodes[i]!)) {

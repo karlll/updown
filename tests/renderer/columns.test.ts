@@ -86,4 +86,25 @@ describe("column rendering", () => {
     expect(html).toContain("<h2>Title</h2>");
     expect(html).toContain("<p>Body</p>");
   });
+
+  test("slide with columns gets 'has-columns' class", () => {
+    const slide: Slide = {
+      index: 1,
+      nodes: [],
+      metadata: emptyMeta,
+      columns: [[para("A")], [para("B")]],
+    };
+    const result = render(makeShow([slide]), reg);
+    expect(result.fullDocument).toContain('class="slide has-columns first last"');
+  });
+
+  test("slide without columns does not get 'has-columns' class", () => {
+    const slide: Slide = {
+      index: 1,
+      nodes: [para("A")],
+      metadata: emptyMeta,
+    };
+    const result = render(makeShow([slide]), reg);
+    expect(result.fullDocument).not.toContain("has-columns");
+  });
 });

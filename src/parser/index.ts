@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import type { Root } from "mdast";
 
 import { extractFrontMatter } from "./frontmatter.ts";
-import { splitIntoSlides } from "./slides.ts";
+import { splitIntoSlides, extractColumns } from "./slides.ts";
 import { processMetaFences } from "./meta.ts";
 import type { SlideShow } from "./types.ts";
 
@@ -22,6 +22,7 @@ export function parse(markdown: string): SlideShow {
   const slides = splitIntoSlides(root.children);
   for (const slide of slides) {
     processMetaFences(slide);
+    extractColumns(slide);
   }
   return { frontMatter, slides };
 }

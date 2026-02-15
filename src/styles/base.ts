@@ -26,11 +26,30 @@ html, body {
   justify-content: center;
 }
 
+.slide.has-columns {
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.slide.has-columns > :not(.columns) {
+  padding: var(--slide-padding);
+  padding-bottom: 0;
+}
+
 .columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  gap: 2rem;
+  gap: 0;
   width: 100%;
+  flex: 1;
+}
+
+.column {
+  padding: var(--slide-padding);
+}
+
+.accent-last-column .column:last-child {
+  background: var(--code-bg);
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -353,6 +353,29 @@ This produces:
 - Headings (`#`/`##`) before the first `+++` span the full width (rendered above the columns)
 - Non-heading content before the first `+++` goes into the first column
 - Columns are laid out using CSS grid (`repeat(auto-fit, minmax(0, 1fr))`) and work with any theme
+- Slides with columns get a `has-columns` class; padding moves from the slide to each column, so column backgrounds fill edge-to-edge
+
+### Styling columns
+
+Because each column handles its own padding, setting a background color on a `.column` fills the full grid cell from edge to edge. Use a slide-level meta-fence class to target specific columns:
+
+````markdown
+---
+
+```meta
+class: accent-last-column
+```
+
+## Comparison
+
+Left content.
+
++++
+
+Right content with accent background.
+````
+
+The built-in `accent-last-column` utility sets the last column's background to the theme's code background color (`--code-bg`). Custom classes can be styled via an external CSS file (see [Styles](#styles)).
 
 ---
 

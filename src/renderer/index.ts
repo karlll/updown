@@ -39,6 +39,7 @@ export function render(
     slideFragments.set(slide.index, innerHtml);
 
     const classes: string[] = ["slide"];
+    if (slide.columns) classes.push("has-columns");
     if (slide.index === 1) classes.push("first");
     if (slide.index === slideCount) classes.push("last");
     // Add slide-level metadata classes

@@ -4,8 +4,8 @@ version: 1
 class:
   - presentation
   - widescreen
-theme: catppuccin-latte
-style: classic
+theme: dark
+style: default
 ---
 
 # Welcome to updown
@@ -150,6 +150,20 @@ App --> User: HTML slideshow
 - Bullet X
 - Bullet Y
 - Bullet Z
+
+---
+
+```meta
+class: accent-last-column
+```
+
+### Styled Columns
+
+Left column with default background.
+
++++
+
+Right column with accent background using the `accent-last-column` class via meta-fence.
 
 ---
 

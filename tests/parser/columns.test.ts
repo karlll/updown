@@ -89,4 +89,21 @@ describe("column breaks (+++)", () => {
     expect(slide.columns![0]![0]!.type).toBe("list");
     expect(slide.columns![1]![0]!.type).toBe("list");
   });
+
+  test("meta-fence before +++ slide attaches to slide metadata", () => {
+    const md = "---\n\n```meta\nclass: accent\n```\n\n## Title\n\nLeft\n\n+++\n\nRight\n";
+    const { slides } = parse(md);
+    const slide = slides[0]!;
+    expect(slide.metadata.cssClasses).toContain("accent");
+    expect(slide.columns).toHaveLength(2);
+    // Meta-fence should not appear in columns or preamble
+    for (const node of slide.nodes) {
+      expect(node.type).not.toBe("code");
+    }
+    for (const col of slide.columns!) {
+      for (const node of col) {
+        expect(node.type).not.toBe("code");
+      }
+    }
+  });
 });
