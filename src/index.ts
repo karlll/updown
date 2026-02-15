@@ -1,7 +1,7 @@
 import { parse } from "./parser/index.ts";
 import { render, FenceRegistry } from "./renderer/index.ts";
 import { generateNavigationScript } from "./navigation/index.ts";
-import { generateStylesheet, themes, defaultTheme } from "./styles/index.ts";
+import { generateStylesheet, themes, defaultTheme, styles } from "./styles/index.ts";
 import { renderExcalidraw } from "./excalidraw/index.ts";
 import { generateMermaidScript } from "./mermaid/index.ts";
 import { startPlantUMLServer } from "./plantuml/server.ts";
@@ -68,6 +68,27 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
   const themeName = slideshow.frontMatter.attributes["data-fm-theme"];
   const theme = themes[themeName ?? defaultTheme] ?? themes[defaultTheme]!;
 
+  // Resolve style: built-in name or external CSS file
+  const styleValue = slideshow.frontMatter.attributes["data-fm-style"];
+  delete slideshow.frontMatter.attributes["data-fm-style"];
+  let styleName: string | undefined;
+  let externalCSS: string | undefined;
+  if (styleValue && (styleValue.includes("/") || styleValue.includes("."))) {
+    const cssPath = resolve(mdDir, styleValue);
+    const cssFile = Bun.file(cssPath);
+    if (await cssFile.exists()) {
+      externalCSS = await cssFile.text();
+    } else {
+      console.warn(`Style file not found: ${cssPath}, using default style`);
+    }
+  } else if (styleValue) {
+    if (styleValue in styles) {
+      styleName = styleValue;
+    } else {
+      console.warn(`Unknown style "${styleValue}", using default style`);
+    }
+  }
+
   // Detect mermaid and plantuml code blocks
   let hasMermaid = false;
   let hasPlantUML = false;
@@ -103,7 +124,7 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
   }
   const mermaidScript = hasMermaid ? generateMermaidScript(theme.mermaidTheme) : undefined;
   const plantumlScript = hasPlantUML ? generatePlantUMLScript() : undefined;
-  const stylesheet = generateStylesheet(themeName);
+  const stylesheet = generateStylesheet(themeName, styleName, externalCSS);
   return render(slideshow, fenceRegistry, generateNavigationScript(), stylesheet, excalidrawSvgs, mermaidScript, plantumlScript);
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { generateStylesheet, themes, defaultTheme } from "../../src/styles/index.ts";
+import { generateStylesheet, themes, defaultTheme, styles } from "../../src/styles/index.ts";
 
 describe("generateStylesheet", () => {
   test("returns CSS with :root variables and base styles", () => {
@@ -57,6 +57,44 @@ describe("generateStylesheet", () => {
     const results = Object.keys(themes).map((name) => generateStylesheet(name));
     const unique = new Set(results);
     expect(unique.size).toBe(Object.keys(themes).length);
+  });
+
+  test("includes style variables in :root", () => {
+    const css = generateStylesheet("light");
+    expect(css).toContain("--font-family:");
+    expect(css).toContain("--font-size-base:");
+    expect(css).toContain("--slide-padding:");
+  });
+
+  test("built-in style name changes style variables", () => {
+    const defaultCSS = generateStylesheet("light");
+    const modernCSS = generateStylesheet("light", "modern");
+    expect(modernCSS).not.toBe(defaultCSS);
+    expect(modernCSS).toContain("uppercase");
+  });
+
+  test("unknown style name falls back to default", () => {
+    const defaultCSS = generateStylesheet("light");
+    const unknownCSS = generateStylesheet("light", "nonexistent");
+    expect(unknownCSS).toBe(defaultCSS);
+  });
+
+  test("external CSS is appended after base styles", () => {
+    const custom = ".my-class { color: red; }";
+    const css = generateStylesheet("light", undefined, custom);
+    expect(css).toContain(custom);
+    // External CSS comes after base CSS
+    const baseIdx = css.indexOf("#slideshow");
+    const customIdx = css.indexOf(custom);
+    expect(customIdx).toBeGreaterThan(baseIdx);
+  });
+
+  test("each built-in style produces different CSS", () => {
+    const results = Object.keys(styles).map((name) =>
+      generateStylesheet("light", name),
+    );
+    const unique = new Set(results);
+    expect(unique.size).toBe(Object.keys(styles).length);
   });
 });
 

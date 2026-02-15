@@ -4,7 +4,8 @@ version: 1
 class:
   - presentation
   - widescreen
-theme: catppuccin-mocha
+theme: catppuccin-latte
+style: classic
 ---
 
 # Welcome to updown

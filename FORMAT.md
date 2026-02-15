@@ -243,6 +243,70 @@ Each theme applies matching colors to both the slide layout and syntax-highlight
 
 ---
 
+## Styles
+
+The `style` front matter key controls non-color visual aspects — typography, spacing, heading decoration, and border treatments. It is independent of the color theme: any style works with any theme.
+
+```markdown
+---
+theme: catppuccin-mocha
+style: modern
+---
+```
+
+### Built-in styles
+
+| Style | Description |
+|---|---|
+| `default` | System sans-serif font, standard spacing (used when `style` is omitted) |
+| `modern` | Inter/Helvetica, larger headings, uppercase h1, more whitespace, rounded corners |
+| `classic` | Georgia serif font, traditional typography, tighter heading margins |
+
+### CSS properties controlled by style
+
+Styles set CSS custom properties that the base stylesheet references:
+
+| Property | What it controls |
+|---|---|
+| `--font-family` | Body text font |
+| `--font-family-heading` | Heading font |
+| `--font-family-code` | Code block font |
+| `--font-size-base` | Base font size |
+| `--line-height` | Body line height |
+| `--h1-size` .. `--h4-size` | Heading sizes |
+| `--heading-weight` | Heading font weight |
+| `--heading-transform` | Heading text transform (e.g. `uppercase`) |
+| `--heading-letter-spacing` | Heading letter spacing |
+| `--slide-padding` | Slide padding |
+| `--block-margin` | Margin below paragraphs, lists, code blocks |
+| `--border-radius` | Border radius for code blocks and images |
+| `--border-radius-inline` | Border radius for inline code |
+
+### External CSS file
+
+Instead of a built-in name, `style` can reference a CSS file relative to the markdown file:
+
+```markdown
+---
+style: ./my-style.css
+---
+```
+
+The external CSS is appended after the base stylesheet. It can override any CSS custom property or add new rules:
+
+```css
+:root {
+  --font-family: "Fira Sans", sans-serif;
+  --slide-padding: 3rem 4rem;
+}
+
+.slide { background-image: url("pattern.svg"); }
+```
+
+If the file is not found, a warning is logged and the default style is used.
+
+---
+
 ## Keyboard Controls
 
 | Key | Action |

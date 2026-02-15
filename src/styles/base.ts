@@ -9,9 +9,9 @@ html, body {
   height: 100%;
   background: var(--bg);
   color: var(--fg);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 1.5rem;
-  line-height: 1.6;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
 }
 
 #slideshow {
@@ -20,7 +20,7 @@ html, body {
 
 .slide {
   min-height: 100vh;
-  padding: 4rem 6rem;
+  padding: var(--slide-padding);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,17 +28,21 @@ html, body {
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--heading);
-  line-height: 1.2;
-  margin-bottom: 0.75em;
+  font-family: var(--font-family-heading);
+  font-weight: var(--heading-weight);
+  text-transform: var(--heading-transform);
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--line-height-heading);
+  margin-bottom: var(--heading-margin-bottom);
 }
 
-h1 { font-size: 2.5em; }
-h2 { font-size: 2em; }
-h3 { font-size: 1.5em; }
-h4 { font-size: 1.25em; }
+h1 { font-size: var(--h1-size); }
+h2 { font-size: var(--h2-size); }
+h3 { font-size: var(--h3-size); }
+h4 { font-size: var(--h4-size); }
 
 p {
-  margin-bottom: 0.75em;
+  margin-bottom: var(--block-margin);
 }
 
 a {
@@ -52,11 +56,11 @@ a:hover {
 }
 
 code {
-  font-family: ui-monospace, "Cascadia Code", "JetBrains Mono", Menlo, monospace;
+  font-family: var(--font-family-code);
   background: var(--code-bg);
   color: var(--code-fg);
   padding: 0.15em 0.35em;
-  border-radius: 4px;
+  border-radius: var(--border-radius-inline);
   font-size: 0.9em;
 }
 
@@ -64,10 +68,10 @@ pre {
   background: var(--fence-bg);
   color: var(--fence-fg);
   padding: 1.25em 1.5em;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   border: 1px solid var(--code-border);
   overflow-x: auto;
-  margin-bottom: 0.75em;
+  margin-bottom: var(--block-margin);
 }
 
 pre code {
@@ -79,19 +83,19 @@ pre code {
 }
 
 .fence {
-  margin-bottom: 0.75em;
+  margin-bottom: var(--block-margin);
 }
 
 blockquote {
   border-left: 3px solid var(--blockquote-border);
   padding-left: 1.25em;
   color: var(--blockquote-fg);
-  margin-bottom: 0.75em;
+  margin-bottom: var(--block-margin);
 }
 
 ul, ol {
   padding-left: 1.5em;
-  margin-bottom: 0.75em;
+  margin-bottom: var(--block-margin);
 }
 
 li {
@@ -101,7 +105,7 @@ li {
 table {
   border-collapse: collapse;
   width: 100%;
-  margin-bottom: 0.75em;
+  margin-bottom: var(--block-margin);
 }
 
 th, td {
@@ -124,7 +128,7 @@ hr {
 img {
   max-width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 
 .excalidraw-embed svg {
