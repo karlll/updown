@@ -3,8 +3,9 @@ id: "edc83b8c-f133-454b-9dc0-7db9c29dae54"
 number: 3
 title: "Slide splitting algorithm"
 createdAt: "2026-02-09T20:23:27.084680Z"
-updatedAt: "2026-02-09T20:23:27.084680Z"
-assignees: []
+updatedAt: "2026-02-10T18:42:52.273999Z"
+assignees:
+- "Claude Code"
 categories:
 - "parser"
 priority: "high"

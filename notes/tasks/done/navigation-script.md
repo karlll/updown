@@ -3,8 +3,9 @@ id: "c8cf0a6f-6f3d-4111-857f-da07c6beb72f"
 number: 9
 title: "Navigation script"
 createdAt: "2026-02-09T20:24:19.480916Z"
-updatedAt: "2026-02-09T20:24:19.480916Z"
-assignees: []
+updatedAt: "2026-02-10T19:33:19.196113Z"
+assignees:
+- "Claude Code"
 categories:
 - "navigation"
 priority: "medium"

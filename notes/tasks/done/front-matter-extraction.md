@@ -3,8 +3,9 @@ id: "c98b4eaa-f45b-4871-bc28-187d41cdf357"
 number: 2
 title: "Front matter extraction"
 createdAt: "2026-02-09T20:23:17.324955Z"
-updatedAt: "2026-02-09T20:23:17.324955Z"
-assignees: []
+updatedAt: "2026-02-10T18:36:56.078686Z"
+assignees:
+- "Claude Code"
 categories:
 - "parser"
 priority: "high"

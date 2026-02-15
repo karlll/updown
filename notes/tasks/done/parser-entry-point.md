@@ -3,8 +3,9 @@ id: "0fe6fb87-c559-4404-8839-f0a37fd58b92"
 number: 5
 title: "Parser entry point"
 createdAt: "2026-02-09T20:23:40.699260Z"
-updatedAt: "2026-02-09T20:23:40.699260Z"
-assignees: []
+updatedAt: "2026-02-10T19:16:41.964044Z"
+assignees:
+- "Claude Code"
 categories:
 - "parser"
 priority: "high"

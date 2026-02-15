@@ -3,8 +3,9 @@ id: "be499cc7-248f-4d87-bff5-92cbd7f9d93e"
 number: 7
 title: "Node-to-HTML renderer"
 createdAt: "2026-02-09T20:24:02.952230Z"
-updatedAt: "2026-02-09T20:24:02.952230Z"
-assignees: []
+updatedAt: "2026-02-10T19:25:20.596293Z"
+assignees:
+- "Claude Code"
 categories:
 - "renderer"
 priority: "high"

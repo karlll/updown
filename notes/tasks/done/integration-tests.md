@@ -3,8 +3,9 @@ id: "9da23df9-4e40-4aea-ac5d-546868301017"
 number: 11
 title: "Integration tests"
 createdAt: "2026-02-09T20:24:37.734010Z"
-updatedAt: "2026-02-09T20:24:37.734010Z"
-assignees: []
+updatedAt: "2026-02-10T19:42:12.856663Z"
+assignees:
+- "Claude Code"
 categories:
 - "testing"
 priority: "medium"

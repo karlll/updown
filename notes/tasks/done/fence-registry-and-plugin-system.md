@@ -3,8 +3,9 @@ id: "7f97ade7-4bbc-408b-ab60-ca88fcf67b12"
 number: 6
 title: "Fence registry and plugin system"
 createdAt: "2026-02-09T20:23:52.250603Z"
-updatedAt: "2026-02-09T20:23:52.250603Z"
-assignees: []
+updatedAt: "2026-02-10T19:19:05.008449Z"
+assignees:
+- "Claude Code"
 categories:
 - "renderer"
 priority: "high"

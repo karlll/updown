@@ -3,8 +3,9 @@ id: "6685ddbb-0cfc-43e6-8b16-1f872a483344"
 number: 10
 title: "Controller and HTTP server"
 createdAt: "2026-02-09T20:24:27.049442Z"
-updatedAt: "2026-02-09T20:24:27.049442Z"
-assignees: []
+updatedAt: "2026-02-10T19:35:04.673037Z"
+assignees:
+- "Claude Code"
 categories:
 - "controller"
 priority: "high"

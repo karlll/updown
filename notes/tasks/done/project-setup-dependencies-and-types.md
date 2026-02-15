@@ -3,7 +3,7 @@ id: "feea9bf9-c118-45f9-b9fa-7291f0ff2b6b"
 number: 1
 title: "Project setup, dependencies, and types"
 createdAt: "2026-02-09T20:23:12.530836Z"
-updatedAt: "2026-02-09T20:26:11.684007Z"
+updatedAt: "2026-02-10T18:25:48.043101Z"
 assignees:
 - "Claude Code"
 categories:

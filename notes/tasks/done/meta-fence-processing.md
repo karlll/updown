@@ -3,8 +3,9 @@ id: "7c03050c-42ac-41be-b972-da7c3f16ec2d"
 number: 4
 title: "Meta-fence processing"
 createdAt: "2026-02-09T20:23:35.866594Z"
-updatedAt: "2026-02-09T20:23:35.866594Z"
-assignees: []
+updatedAt: "2026-02-10T18:48:57.978853Z"
+assignees:
+- "Claude Code"
 categories:
 - "parser"
 priority: "high"

@@ -3,8 +3,9 @@ id: "474bfde7-94d9-4dfc-9d7e-2b86a204f4ff"
 number: 8
 title: "Slideshow renderer"
 createdAt: "2026-02-09T20:24:13.034881Z"
-updatedAt: "2026-02-09T20:24:13.034881Z"
-assignees: []
+updatedAt: "2026-02-10T19:29:17.665309Z"
+assignees:
+- "Claude Code"
 categories:
 - "renderer"
 priority: "high"
