@@ -20,13 +20,13 @@ describe("generateStylesheet", () => {
   test("uses dark theme variables for 'dark'", () => {
     const css = generateStylesheet("dark");
     expect(css).toContain(themes["dark"]!.variables["--bg"]!);
-    expect(css).toContain(themes["dark"]!.variables["--heading"]!);
+    expect(css).toContain(themes["dark"]!.variables["--h1-color"]!);
   });
 
   test("uses catppuccin-mocha variables", () => {
     const css = generateStylesheet("catppuccin-mocha");
     expect(css).toContain("#1e1e2e"); // mocha bg
-    expect(css).toContain("#cba6f7"); // mocha heading
+    expect(css).toContain("#cba6f7"); // mocha h1
   });
 
   test("uses catppuccin-latte variables", () => {

@@ -53,7 +53,6 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: var(--heading);
   font-family: var(--font-family-heading);
   font-weight: var(--heading-weight);
   text-transform: var(--heading-transform);
@@ -62,10 +61,11 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--heading-margin-bottom);
 }
 
-h1 { font-size: var(--h1-size); }
-h2 { font-size: var(--h2-size); }
-h3 { font-size: var(--h3-size); }
-h4 { font-size: var(--h4-size); }
+h1 { font-size: var(--h1-size); color: var(--h1-color); }
+h2 { font-size: var(--h2-size); color: var(--h2-color); }
+h3 { font-size: var(--h3-size); color: var(--h3-color); }
+h4 { font-size: var(--h4-size); color: var(--h3-color); }
+h5, h6 { color: var(--h3-color); }
 
 p {
   margin-bottom: var(--block-margin);
@@ -78,6 +78,7 @@ a {
 }
 
 a:hover {
+  color: var(--link-hover);
   text-decoration-thickness: 2px;
 }
 
@@ -128,6 +129,10 @@ li {
   margin-bottom: 0.25em;
 }
 
+li::marker {
+  color: var(--list-marker);
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -173,6 +178,6 @@ img {
   height: auto;
 }
 
-em { font-style: italic; }
-strong { font-weight: 700; }
+em { font-style: italic; color: var(--em); }
+strong { font-weight: 700; color: var(--strong); }
 `.trim();
