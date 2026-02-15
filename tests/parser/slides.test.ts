@@ -171,4 +171,17 @@ describe("splitIntoSlides", () => {
       expect(slide.metadata).toEqual({ attributes: {}, cssClasses: [] });
     }
   });
+
+  test("paragraph with text '+++' is detected as column break", () => {
+    const slides = splitIntoSlides([h(2, "Title"), p("+++"), p("after")]);
+    expect(slides).toHaveLength(1);
+    expect(slides[0]!.columns).toBeDefined();
+    expect(slides[0]!.columns).toHaveLength(2);
+    expect(slides[0]!.nodes).toEqual([h(2, "Title")]);
+  });
+
+  test("slides without +++ have no columns", () => {
+    const slides = splitIntoSlides([h(1, "Title"), p("body")]);
+    expect(slides[0]!.columns).toBeUndefined();
+  });
 });

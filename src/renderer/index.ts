@@ -26,7 +26,16 @@ export function render(
   const slideDivs: string[] = [];
 
   for (const slide of slideshow.slides) {
-    const innerHtml = slide.nodes.map((n) => renderNode(n, fenceRegistry, excalidrawSvgs)).join("");
+    let innerHtml: string;
+    if (slide.columns) {
+      const preambleHtml = slide.nodes.map((n) => renderNode(n, fenceRegistry, excalidrawSvgs)).join("");
+      const columnsHtml = slide.columns
+        .map((col) => `<div class="column">${col.map((n) => renderNode(n, fenceRegistry, excalidrawSvgs)).join("")}</div>`)
+        .join("");
+      innerHtml = `${preambleHtml}<div class="columns">${columnsHtml}</div>`;
+    } else {
+      innerHtml = slide.nodes.map((n) => renderNode(n, fenceRegistry, excalidrawSvgs)).join("");
+    }
     slideFragments.set(slide.index, innerHtml);
 
     const classes: string[] = ["slide"];

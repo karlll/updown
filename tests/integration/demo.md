@@ -135,6 +135,24 @@ App --> User: HTML slideshow
 
 ---
 
+## Side by Side
+
+### Column 1
+
+- Bullet A
+- Bullet B
+- Bullet C
+
++++
+
+### Column 2
+
+- Bullet X
+- Bullet Y
+- Bullet Z
+
+---
+
 ```meta
 class: closing
 ```

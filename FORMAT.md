@@ -307,6 +307,55 @@ If the file is not found, a warning is logged and the default style is used.
 
 ---
 
+## Columns
+
+Use `+++` to split slide content into columns. Each `+++` creates a new column boundary.
+
+```markdown
+## Comparison
+
+Left column content.
+
+- Item 1
+- Item 2
+
++++
+
+Right column content.
+
+- Item A
+- Item B
+```
+
+This produces:
+
+```html
+<div id="slide-1" class="slide first last">
+  <h2>Comparison</h2>
+  <div class="columns">
+    <div class="column">
+      <p>Left column content.</p>
+      <ul><li>Item 1</li><li>Item 2</li></ul>
+    </div>
+    <div class="column">
+      <p>Right column content.</p>
+      <ul><li>Item A</li><li>Item B</li></ul>
+    </div>
+  </div>
+</div>
+```
+
+### Rules
+
+- `+++` is a **within-slide** separator — it does not create a new slide
+- `+++` is not rendered (it is consumed, like `---`)
+- Multiple `+++` produce multiple columns
+- Headings (`#`/`##`) before the first `+++` span the full width (rendered above the columns)
+- Non-heading content before the first `+++` goes into the first column
+- Columns are laid out using CSS grid (`repeat(auto-fit, minmax(0, 1fr))`) and work with any theme
+
+---
+
 ## Keyboard Controls
 
 | Key | Action |

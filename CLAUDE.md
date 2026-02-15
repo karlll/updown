@@ -56,6 +56,8 @@ Six core components:
 - `---` followed by `#`/`##` creates only one new slide, not two
 - Slides are wrapped in `<div id="slide-N" class="slide">` inside `<div id="slideshow">`
 - First slide div gets class `first`, last gets `last`; if only one slide, only `first`
+- `+++` splits slide content into columns (does NOT create a new slide)
+- Headings before the first `+++` span full width; other content goes into `<div class="column">` wrappers inside a `<div class="columns">` grid container
 
 ## Front Matter
 
@@ -63,6 +65,7 @@ Six core components:
 - Values become attributes on the `#slideshow` div, prefixed with `data-fm-`
 - Exception: `class` is passed as a regular `class` attribute (no prefix)
 - Special key: `theme` selects the color theme (`light`, `dark`, `catppuccin-mocha`, `catppuccin-latte`)
+- Special key: `style` selects a style preset (`default`, `modern`, `classic`) or a path to an external CSS file
 - Arrays become space-separated strings
 - Only string, number, and flat arrays of string/number are valid types
 

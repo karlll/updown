@@ -26,6 +26,13 @@ html, body {
   justify-content: center;
 }
 
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: var(--heading);
   font-family: var(--font-family-heading);

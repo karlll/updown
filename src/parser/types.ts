@@ -11,6 +11,8 @@ export type Slide = {
   index: number;
   nodes: RootContent[];
   metadata: NodeMetadata;
+  /** When +++ column breaks are present: preamble nodes (headings) stay in `nodes`, column groups go here. */
+  columns?: RootContent[][];
 };
 
 /** The full intermediate format produced by the parser. */

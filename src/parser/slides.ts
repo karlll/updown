@@ -9,11 +9,19 @@ function isMetaFence(node: RootContent): boolean {
   return node.type === "code" && node.lang === "meta";
 }
 
+/** Check whether a node is a `+++` column break (parsed by mdast as a paragraph with text "+++"). */
+function isColumnBreak(node: RootContent): boolean {
+  if (node.type !== "paragraph") return false;
+  const children = node.children;
+  return children.length === 1 && children[0]!.type === "text" && children[0]!.value === "+++";
+}
+
 const emptyMetadata = () => ({ attributes: {}, cssClasses: [] });
 
 /**
  * Splits a list of mdast root children into slides based on heading
- * and thematic break rules.
+ * and thematic break rules. Column breaks (`+++`) are preserved within
+ * slides rather than creating new slides.
  */
 export function splitIntoSlides(nodes: RootContent[]): Slide[] {
   const slides: Slide[] = [];
@@ -62,6 +70,7 @@ export function splitIntoSlides(nodes: RootContent[]): Slide[] {
       continue;
     }
 
+    // Column breaks are kept in the slide nodes for later extraction
     current.push(node);
   }
 
@@ -70,5 +79,52 @@ export function splitIntoSlides(nodes: RootContent[]): Slide[] {
     slides.push({ index: slides.length + 1, nodes: current, metadata: emptyMetadata() });
   }
 
+  // Second pass: extract column breaks within each slide
+  for (const slide of slides) {
+    extractColumns(slide);
+  }
+
   return slides;
+}
+
+/**
+ * If a slide contains `+++` column breaks, split into preamble (headings)
+ * kept in `slide.nodes` and column groups stored in `slide.columns`.
+ */
+function extractColumns(slide: Slide): void {
+  const breakIndices: number[] = [];
+  for (let i = 0; i < slide.nodes.length; i++) {
+    if (isColumnBreak(slide.nodes[i]!)) {
+      breakIndices.push(i);
+    }
+  }
+  if (breakIndices.length === 0) return;
+
+  // Collect preamble: heading nodes before the first +++
+  const firstBreak = breakIndices[0]!;
+  const preamble: RootContent[] = [];
+  const firstColumnNodes: RootContent[] = [];
+  for (let i = 0; i < firstBreak; i++) {
+    const node = slide.nodes[i]!;
+    if (isSlideHeading(node)) {
+      preamble.push(node);
+    } else {
+      firstColumnNodes.push(node);
+    }
+  }
+
+  // Build column groups from content between +++ markers
+  const columns: RootContent[][] = [firstColumnNodes];
+  for (let b = 0; b < breakIndices.length; b++) {
+    const start = breakIndices[b]! + 1;
+    const end = b + 1 < breakIndices.length ? breakIndices[b + 1]! : slide.nodes.length;
+    const col: RootContent[] = [];
+    for (let i = start; i < end; i++) {
+      col.push(slide.nodes[i]!);
+    }
+    columns.push(col);
+  }
+
+  slide.nodes = preamble;
+  slide.columns = columns;
 }
