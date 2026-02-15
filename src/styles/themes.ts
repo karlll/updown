@@ -467,7 +467,47 @@ const synthwave84: Theme = {
     "--excalidraw-filter": "invert(1) hue-rotate(180deg)",
   },
   extraCSS: `
+@font-face {
+  font-family: "TopazNG Classic";
+  src: url(/assets/TopazNG_Classic-Regular.otf) format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TopazNG Code";
+  src: url(/assets/TopazNG_Code-Regular.otf) format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TopazNG Code";
+  src: url(/assets/TopazNG_Code-Bold.otf) format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TopazNG Code";
+  src: url(/assets/TopazNG_Code-Italic.otf) format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "TopazNG Code";
+  src: url(/assets/TopazNG_Code-BoldItalic.otf) format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+html, body {
+  font-family: "TopazNG Code", monospace;
+}
+
 h1, h2, h3, h4, h5, h6 {
+  font-family: "TopazNG Classic", serif;
   text-shadow: 0 0 10px currentColor, 0 0 40px currentColor;
 }
 

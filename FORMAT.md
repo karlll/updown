@@ -250,7 +250,7 @@ theme: catppuccin-mocha
 ---
 ```
 
-Several themes are inspired by well-known color schemes: [Solarized](https://ethanschoonover.com/solarized/) by Ethan Schoonover, [Monokai](https://monokai.pro/) by Wimer Hazenberg, [Gruvbox](https://github.com/morhetz/gruvbox) by Pavel Pertsev, [Nord](https://www.nordtheme.com/) by Sven Greb, [Catppuccin](https://github.com/catppuccin/catppuccin) by Pocco81, and [Synthwave '84](https://github.com/robb0wen/synthwave-vscode) by Robb Owen.
+Several themes are inspired by well-known color schemes: [Solarized](https://ethanschoonover.com/solarized/) by Ethan Schoonover, [Monokai](https://monokai.pro/) by Wimer Hazenberg, [Gruvbox](https://github.com/morhetz/gruvbox) by Pavel Pertsev, [Nord](https://www.nordtheme.com/) by Sven Greb, [Catppuccin](https://github.com/catppuccin/catppuccin) by Pocco81, and [Synthwave '84](https://github.com/robb0wen/synthwave-vscode) by Robb Owen. The Synthwave '84 theme uses [TopazNG](https://codeberg.org/ideasman42) fonts by Campbell Barton.
 
 Each theme applies matching colors to both the slide layout and syntax-highlighted code blocks. If the `theme` key is omitted or unrecognized, `light` is used.
 
