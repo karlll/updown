@@ -485,6 +485,25 @@ li::marker {
 
 pre {
   box-shadow: 0 0 12px rgba(54, 249, 246, 0.15), inset 0 0 12px rgba(54, 249, 246, 0.05);
+}
+
+.slide {
+  background: radial-gradient(ellipse at 50% 40%, #2e2845 0%, transparent 70%);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.4);
+}
+
+.slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
 }`.trim(),
 };
 

@@ -19,6 +19,7 @@ html, body {
 }
 
 .slide {
+  position: relative;
   min-height: 100vh;
   padding: var(--slide-padding);
   display: flex;
