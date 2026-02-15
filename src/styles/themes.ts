@@ -3,6 +3,7 @@ export type Theme = {
   shikiTheme: string;
   mermaidTheme: "default" | "dark";
   variables: Record<string, string>;
+  extraCSS?: string;
 };
 
 const light: Theme = {
@@ -435,6 +436,58 @@ const solarizedLight: Theme = {
   },
 };
 
+// --- Synthwave '84 ---
+
+const synthwave84: Theme = {
+  name: "synthwave-84",
+  shikiTheme: "synthwave-84",
+  mermaidTheme: "dark",
+  variables: {
+    "--bg": "#262335",
+    "--fg": "#e0d9f6",
+    "--h1-color": "#ff7edb",
+    "--h2-color": "#36f9f6",
+    "--h3-color": "#f97e72",
+    "--accent": "#36f9f6",
+    "--link": "#36f9f6",
+    "--link-hover": "#72f1b8",
+    "--strong": "#ffffff",
+    "--em": "#fede5d",
+    "--list-marker": "#ff7edb",
+    "--code-bg": "#2a2139",
+    "--code-fg": "#72f1b8",
+    "--code-border": "#3b3055",
+    "--fence-bg": "#2a2139",
+    "--fence-fg": "#e0d9f6",
+    "--blockquote-border": "#ff8b39",
+    "--blockquote-fg": "#848bbd",
+    "--table-border": "#3b3055",
+    "--table-header-bg": "#2a2139",
+    "--hr-color": "#3b3055",
+    "--excalidraw-filter": "invert(1) hue-rotate(180deg)",
+  },
+  extraCSS: `
+h1, h2, h3, h4, h5, h6 {
+  text-shadow: 0 0 10px currentColor, 0 0 40px currentColor;
+}
+
+strong {
+  text-shadow: 0 0 10px currentColor, 0 0 30px currentColor;
+}
+
+a {
+  text-shadow: 0 0 8px currentColor, 0 0 20px currentColor;
+}
+
+li::marker {
+  text-shadow: 0 0 8px currentColor;
+}
+
+pre {
+  box-shadow: 0 0 12px rgba(54, 249, 246, 0.15), inset 0 0 12px rgba(54, 249, 246, 0.05);
+}`.trim(),
+};
+
 export const themes: Record<string, Theme> = {
   light,
   dark,
@@ -450,6 +503,7 @@ export const themes: Record<string, Theme> = {
   "nord-light": nordLight,
   "solarized-dark": solarizedDark,
   "solarized-light": solarizedLight,
+  "synthwave-84": synthwave84,
 };
 
 export const defaultTheme = "light";

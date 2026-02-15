@@ -79,6 +79,27 @@ describe("generateStylesheet", () => {
     expect(unknownCSS).toBe(defaultCSS);
   });
 
+  test("theme extraCSS is included when present", () => {
+    const css = generateStylesheet("synthwave-84");
+    expect(css).toContain("text-shadow");
+    expect(css).toContain("/* synthwave-84 effects */");
+  });
+
+  test("theme extraCSS is absent for themes without it", () => {
+    const css = generateStylesheet("light");
+    expect(css).not.toContain("text-shadow");
+    expect(css).not.toContain("effects */");
+  });
+
+  test("theme extraCSS appears before external CSS", () => {
+    const custom = ".custom { color: red; }";
+    const css = generateStylesheet("synthwave-84", undefined, custom);
+    const effectsIdx = css.indexOf("text-shadow");
+    const customIdx = css.indexOf(custom);
+    expect(effectsIdx).toBeGreaterThan(-1);
+    expect(customIdx).toBeGreaterThan(effectsIdx);
+  });
+
   test("external CSS is appended after base styles", () => {
     const custom = ".my-class { color: red; }";
     const css = generateStylesheet("light", undefined, custom);

@@ -27,9 +27,15 @@ export function generateStylesheet(
 
   const rootBlock = `:root {\n${styleVars}\n${themeVars}\n}`;
 
-  if (externalCSS) {
-    return `${rootBlock}\n\n${baseCSS}\n\n${externalCSS}`;
+  let css = `${rootBlock}\n\n${baseCSS}`;
+
+  if (theme.extraCSS) {
+    css += `\n\n/* ${theme.name} effects */\n${theme.extraCSS}`;
   }
 
-  return `${rootBlock}\n\n${baseCSS}`;
+  if (externalCSS) {
+    css += `\n\n${externalCSS}`;
+  }
+
+  return css;
 }

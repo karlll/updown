@@ -242,6 +242,7 @@ The `theme` front matter key selects the color scheme for the slideshow. Availab
 | `nord-light` | Nord arctic light |
 | `solarized-dark` | Solarized dark |
 | `solarized-light` | Solarized light |
+| `synthwave-84` | Synthwave '84 neon dark (with glow effects) |
 
 ```markdown
 ---
@@ -271,6 +272,8 @@ style: modern
 | `default` | System sans-serif font, standard spacing (used when `style` is omitted) |
 | `modern` | Inter/Helvetica, larger headings, uppercase h1, more whitespace, rounded corners |
 | `classic` | Georgia serif font, traditional typography, tighter heading margins |
+| `smooth` | Cyberminimalist — slab serif headings, grotesque body, geometric edges, generous whitespace |
+| `terminal` | Monospace everything, compact density, sharp edges, uppercase headings — TUI/UNIX feel |
 
 ### CSS properties controlled by style
 

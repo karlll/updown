@@ -4,8 +4,8 @@ version: 1
 class:
   - presentation
   - widescreen
-theme: solarized-light
-style: default
+theme: synthwave-84
+style: terminal
 ---
 
 # Welcome to updown
