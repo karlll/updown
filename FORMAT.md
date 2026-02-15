@@ -230,8 +230,18 @@ The `theme` front matter key selects the color scheme for the slideshow. Availab
 |---|---|
 | `light` | Light background, dark text (default) |
 | `dark` | Dark background, light text |
-| `catppuccin-mocha` | Catppuccin dark variant |
-| `catppuccin-latte` | Catppuccin light variant |
+| `catppuccin-latte` | Catppuccin pastel light |
+| `catppuccin-frappe` | Catppuccin mid-tone dark |
+| `catppuccin-macchiato` | Catppuccin deeper dark |
+| `catppuccin-mocha` | Catppuccin darkest |
+| `monokai-dark` | Classic Monokai dark |
+| `monokai-light` | Monokai-inspired light |
+| `gruvbox-dark` | Gruvbox retro dark |
+| `gruvbox-light` | Gruvbox retro light |
+| `nord-dark` | Nord arctic dark |
+| `nord-light` | Nord arctic light |
+| `solarized-dark` | Solarized dark |
+| `solarized-light` | Solarized light |
 
 ```markdown
 ---

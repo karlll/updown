@@ -33,7 +33,7 @@ Six core components:
 
 3. **Renderer** (`src/renderer/`) — Converts the AST into HTML output. FenceRegistry supports pluggable renderers and Shiki syntax highlighting for code blocks with language tags. Image nodes referencing `.excalidraw` files are replaced with pre-rendered inline SVG.
 
-4. **Styles** (`src/styles/`) — Theme system using CSS custom properties. Built-in themes: `light`, `dark`, `catppuccin-mocha`, `catppuccin-latte`. Each theme maps to a Shiki syntax highlighting theme. Selected via front matter `theme` key.
+4. **Styles** (`src/styles/`) — Theme system using CSS custom properties. 14 built-in themes: `light`, `dark`, `catppuccin-latte`/`frappe`/`macchiato`/`mocha`, `monokai-dark`/`light`, `gruvbox-dark`/`light`, `nord-dark`/`light`, `solarized-dark`/`light`. Each theme maps to a Shiki syntax highlighting theme. Selected via front matter `theme` key.
 
 5. **Navigation** (`src/navigation/`) — Client-side keyboard navigation (ArrowLeft/ArrowRight) and auto-scaling (reduces font-size via binary search when slide content overflows the viewport).
 
@@ -64,7 +64,7 @@ Six core components:
 - YAML at the top of the markdown document, never rendered
 - Values become attributes on the `#slideshow` div, prefixed with `data-fm-`
 - Exception: `class` is passed as a regular `class` attribute (no prefix)
-- Special key: `theme` selects the color theme (`light`, `dark`, `catppuccin-mocha`, `catppuccin-latte`)
+- Special key: `theme` selects the color theme (14 built-in: `light`, `dark`, catppuccin, monokai, gruvbox, nord, solarized variants)
 - Special key: `style` selects a style preset (`default`, `modern`, `classic`) or a path to an external CSS file
 - Arrays become space-separated strings
 - Only string, number, and flat arrays of string/number are valid types

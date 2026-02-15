@@ -4,7 +4,7 @@ version: 1
 class:
   - presentation
   - widescreen
-theme: dark
+theme: solarized-light
 style: default
 ---
 
