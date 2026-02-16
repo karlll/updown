@@ -6,6 +6,8 @@ export { themes, defaultTheme } from "./themes.ts";
 export type { Theme } from "./themes.ts";
 export { styles, defaultStyleName } from "./presets.ts";
 export type { Style } from "./presets.ts";
+export { loadExternalTheme, discoverExternalThemes } from "./loader.ts";
+export type { LoadedExternalTheme } from "./loader.ts";
 
 /**
  * Generates a complete CSS stylesheet string for the given theme and style.

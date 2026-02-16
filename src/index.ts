@@ -13,17 +13,39 @@ import type { RenderedSlideShow } from "./renderer/index.ts";
 import type { Highlighter } from "./renderer/fence.ts";
 import type { BundledLanguage } from "shiki";
 import { resolve, dirname } from "node:path";
+import { discoverExternalThemes } from "./styles/loader.ts";
+import type { LoadedExternalTheme } from "./styles/loader.ts";
 // @ts-ignore — Bun text import
 import mermaidClientJs from "mermaid/dist/mermaid.min.js" with { type: "text" };
 
-const filePath = Bun.argv[2];
+// Parse CLI arguments: [--theme <dir>]... <markdown-file>
+const args = Bun.argv.slice(2);
+const cliThemeDirs: string[] = [];
+let filePath: string | undefined;
+
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === "--theme" && i + 1 < args.length) {
+    cliThemeDirs.push(args[++i]!);
+  } else if (!args[i]!.startsWith("--")) {
+    filePath = args[i];
+  }
+}
 
 if (!filePath) {
-  console.error("Usage: bun src/index.ts <path-to-markdown-file>");
+  console.error("Usage: bun src/index.ts [--theme <theme-dir>] <path-to-markdown-file>");
   process.exit(1);
 }
 
 let plantumlServer: PlantUMLServer | null = null;
+
+// Load external themes and merge into registries
+const externalThemes = await discoverExternalThemes(filePath, cliThemeDirs);
+for (const ext of externalThemes) {
+  themes[ext.name] = ext.theme;
+  if (ext.style) {
+    styles[ext.name] = ext.style;
+  }
+}
 
 const shikiThemes = Object.values(themes).map((t) => t.shikiTheme);
 const highlighter = await createHighlighter({
@@ -166,6 +188,21 @@ const server = Bun.serve({
       const file = Bun.file(assetPath);
       if (await file.exists()) {
         return new Response(file);
+      }
+    }
+
+    // Serve external theme assets: /themes/{name}/assets/{path}
+    const themeAssetMatch = url.pathname.match(/^\/themes\/([^/]+)\/assets\/(.+)$/);
+    if (themeAssetMatch) {
+      const ext = externalThemes.find((t) => t.name === themeAssetMatch[1]);
+      if (ext?.assetsDir) {
+        const assetPath = resolve(ext.assetsDir, themeAssetMatch[2]!);
+        if (assetPath.startsWith(ext.assetsDir)) {
+          const file = Bun.file(assetPath);
+          if (await file.exists()) {
+            return new Response(file);
+          }
+        }
       }
     }
 

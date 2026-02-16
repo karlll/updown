@@ -1,0 +1,28 @@
+{
+  "shikiTheme": "synthwave-84",
+  "mermaidTheme": "dark",
+  "variables": {
+    "--bg": "#262335",
+    "--fg": "#e0d9f6",
+    "--h1-color": "#ff7edb",
+    "--h2-color": "#36f9f6",
+    "--h3-color": "#f97e72",
+    "--accent": "#36f9f6",
+    "--link": "#36f9f6",
+    "--link-hover": "#72f1b8",
+    "--strong": "#ffffff",
+    "--em": "#fede5d",
+    "--list-marker": "#ff7edb",
+    "--code-bg": "#2a2139",
+    "--code-fg": "#72f1b8",
+    "--code-border": "#3b3055",
+    "--fence-bg": "#2a2139",
+    "--fence-fg": "#e0d9f6",
+    "--blockquote-border": "#ff8b39",
+    "--blockquote-fg": "#848bbd",
+    "--table-border": "#3b3055",
+    "--table-header-bg": "#2a2139",
+    "--hr-color": "#3b3055",
+    "--excalidraw-filter": "invert(1) hue-rotate(180deg)"
+  }
+}

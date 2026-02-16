@@ -1,5 +1,20 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test, beforeAll, afterAll } from "bun:test";
 import { generateStylesheet, themes, defaultTheme, styles } from "../../src/styles/index.ts";
+
+// Register a temporary theme with extraCSS for testing
+const testExtraCSSTheme = "_test-extra";
+beforeAll(() => {
+  themes[testExtraCSSTheme] = {
+    name: testExtraCSSTheme,
+    shikiTheme: "github-dark",
+    mermaidTheme: "dark",
+    variables: { ...themes["dark"]!.variables },
+    extraCSS: "h1 { text-shadow: 0 0 10px currentColor; }",
+  };
+});
+afterAll(() => {
+  delete themes[testExtraCSSTheme];
+});
 
 describe("generateStylesheet", () => {
   test("returns CSS with :root variables and base styles", () => {
@@ -80,9 +95,9 @@ describe("generateStylesheet", () => {
   });
 
   test("theme extraCSS is included when present", () => {
-    const css = generateStylesheet("synthwave-84");
+    const css = generateStylesheet(testExtraCSSTheme);
     expect(css).toContain("text-shadow");
-    expect(css).toContain("/* synthwave-84 effects */");
+    expect(css).toContain(`/* ${testExtraCSSTheme} effects */`);
   });
 
   test("theme extraCSS is absent for themes without it", () => {
@@ -93,7 +108,7 @@ describe("generateStylesheet", () => {
 
   test("theme extraCSS appears before external CSS", () => {
     const custom = ".custom { color: red; }";
-    const css = generateStylesheet("synthwave-84", undefined, custom);
+    const css = generateStylesheet(testExtraCSSTheme, undefined, custom);
     const effectsIdx = css.indexOf("text-shadow");
     const customIdx = css.indexOf(custom);
     expect(effectsIdx).toBeGreaterThan(-1);

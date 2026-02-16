@@ -33,7 +33,7 @@ Six core components:
 
 3. **Renderer** (`src/renderer/`) — Converts the AST into HTML output. FenceRegistry supports pluggable renderers and Shiki syntax highlighting for code blocks with language tags. Image nodes referencing `.excalidraw` files are replaced with pre-rendered inline SVG.
 
-4. **Styles** (`src/styles/`) — Theme system using CSS custom properties. 15 built-in themes: `light`, `dark`, `catppuccin-latte`/`frappe`/`macchiato`/`mocha`, `monokai-dark`/`light`, `gruvbox-dark`/`light`, `nord-dark`/`light`, `solarized-dark`/`light`, `synthwave-84`. Each theme maps to a Shiki syntax highlighting theme. Selected via front matter `theme` key. Themes may include optional `extraCSS` for theme-specific effects (e.g., synthwave-84's neon glow).
+4. **Styles** (`src/styles/`) — Theme system using CSS custom properties. 14 built-in themes: `light`, `dark`, `catppuccin-latte`/`frappe`/`macchiato`/`mocha`, `monokai-dark`/`light`, `gruvbox-dark`/`light`, `nord-dark`/`light`, `solarized-dark`/`light`. Each theme maps to a Shiki syntax highlighting theme. Selected via front matter `theme` key. Themes may include optional `extraCSS` for theme-specific effects. Supports external theme directories (`themes/` next to markdown file or via `--theme` CLI flag) with `theme.json`, `style.json`, `extra.css`, and `assets/`.
 
 5. **Navigation** (`src/navigation/`) — Client-side keyboard navigation (ArrowLeft/ArrowRight) and auto-scaling (reduces font-size via binary search when slide content overflows the viewport).
 
