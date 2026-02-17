@@ -1,0 +1,149 @@
+/* Quantico — headings */
+@font-face {
+  font-family: "Quantico";
+  src: url(/themes/brutalism/assets/fonts/Quantico-Regular.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Quantico";
+  src: url(/themes/brutalism/assets/fonts/Quantico-Bold.ttf) format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Quantico";
+  src: url(/themes/brutalism/assets/fonts/Quantico-Italic.ttf) format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Quantico";
+  src: url(/themes/brutalism/assets/fonts/Quantico-BoldItalic.ttf) format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: fallback;
+}
+
+/* Hanken Grotesk — body */
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url(/themes/brutalism/assets/fonts/HankenGrotesk-Light.ttf) format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url(/themes/brutalism/assets/fonts/HankenGrotesk-Regular.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url(/themes/brutalism/assets/fonts/HankenGrotesk-Medium.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url(/themes/brutalism/assets/fonts/HankenGrotesk-Bold.ttf) format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url(/themes/brutalism/assets/fonts/HankenGrotesk-ExtraBold.ttf) format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url(/themes/brutalism/assets/fonts/HankenGrotesk-Italic.ttf) format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: fallback;
+}
+
+/* === BRUTALIST OVERRIDES === */
+
+/* Thick borders on code blocks — no subtle 1px */
+pre {
+  border-width: 3px;
+  border-style: solid;
+}
+
+code {
+  border: 2px solid var(--code-border);
+  padding: 0.1em 0.3em;
+}
+
+pre code {
+  border: none;
+  padding: 0;
+}
+
+/* Heavy table borders */
+th, td {
+  border-width: 2px;
+}
+
+/* Blockquote — thick bar */
+blockquote {
+  border-left-width: 6px;
+}
+
+/* Links — raw underlines, no decoration games */
+a {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+}
+a:hover {
+  text-decoration-thickness: 5px;
+}
+
+/* Strong emphasis — extra bold */
+strong {
+  font-weight: 800;
+}
+
+/* HR — thick and blunt */
+hr {
+  border-top-width: 4px;
+  border-top-style: solid;
+}
+
+/* Headings — no smooth hierarchy, raw and heavy */
+h1 {
+  border-bottom: 5px solid currentColor;
+  padding-bottom: 0.15em;
+}
+
+/* Slide — hard edges, visible structure */
+.slide {
+  border-bottom: 4px solid var(--hr-color);
+}
+.slide.last {
+  border-bottom: none;
+}
+
+/* Columns — visible grid seams */
+.columns {
+  border-top: 3px solid var(--hr-color);
+}
+.column + .column {
+  border-left: 3px solid var(--hr-color);
+}
+
+/* Images — no rounding, hard border */
+img {
+  border: 3px solid var(--code-border);
+}

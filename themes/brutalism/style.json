@@ -1,0 +1,22 @@
+{
+  "variables": {
+    "--font-family": "\"Hanken Grotesk\", \"Arial Black\", Arial, sans-serif",
+    "--font-family-heading": "\"Quantico\", \"Impact\", \"Arial Black\", sans-serif",
+    "--font-family-code": "\"Courier New\", Courier, monospace",
+    "--font-size-base": "1.3rem",
+    "--line-height": "1.45",
+    "--line-height-heading": "1.1",
+    "--h1-size": "3.5em",
+    "--h2-size": "2.4em",
+    "--h3-size": "1.6em",
+    "--h4-size": "1.2em",
+    "--heading-weight": "700",
+    "--heading-transform": "uppercase",
+    "--heading-letter-spacing": "0",
+    "--heading-margin-bottom": "0.4em",
+    "--slide-padding": "2.5rem 3.5rem",
+    "--block-margin": "0.8em",
+    "--border-radius": "0px",
+    "--border-radius-inline": "0px"
+  }
+}

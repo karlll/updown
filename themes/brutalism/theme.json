@@ -1,0 +1,60 @@
+{
+  "variants": {
+    "light": {
+      "shikiTheme": "github-light",
+      "mermaidTheme": "default",
+      "variables": {
+        "--bg": "#f5f5f5",
+        "--fg": "#1a1a1a",
+        "--h1-color": "#1a1a1a",
+        "--h2-color": "#1a1a1a",
+        "--h3-color": "#333333",
+        "--accent": "#ff3d00",
+        "--link": "#0d47a1",
+        "--link-hover": "#1a1a1a",
+        "--strong": "#1a1a1a",
+        "--em": "#333333",
+        "--list-marker": "#ff3d00",
+        "--code-bg": "#e8e8e8",
+        "--code-fg": "#1a1a1a",
+        "--code-border": "#1a1a1a",
+        "--fence-bg": "#e8e8e8",
+        "--fence-fg": "#1a1a1a",
+        "--blockquote-border": "#1a1a1a",
+        "--blockquote-fg": "#555555",
+        "--table-border": "#1a1a1a",
+        "--table-header-bg": "#d4d4d4",
+        "--hr-color": "#1a1a1a",
+        "--excalidraw-filter": "none"
+      }
+    },
+    "dark": {
+      "shikiTheme": "github-dark",
+      "mermaidTheme": "dark",
+      "variables": {
+        "--bg": "#1a1a1a",
+        "--fg": "#e8e8e8",
+        "--h1-color": "#f5f5f5",
+        "--h2-color": "#f5f5f5",
+        "--h3-color": "#a7a8aa",
+        "--accent": "#ff3d00",
+        "--link": "#4682b4",
+        "--link-hover": "#f5f5f5",
+        "--strong": "#ffffff",
+        "--em": "#a7a8aa",
+        "--list-marker": "#ff3d00",
+        "--code-bg": "#2a2a2a",
+        "--code-fg": "#e8e8e8",
+        "--code-border": "#e8e8e8",
+        "--fence-bg": "#2a2a2a",
+        "--fence-fg": "#e8e8e8",
+        "--blockquote-border": "#e8e8e8",
+        "--blockquote-fg": "#7d7f7d",
+        "--table-border": "#e8e8e8",
+        "--table-header-bg": "#333333",
+        "--hr-color": "#e8e8e8",
+        "--excalidraw-filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  }
+}
