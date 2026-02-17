@@ -8,11 +8,60 @@ export type LoadedExternalTheme = {
   theme: Theme;
   style?: Style;
   assetsDir?: string;
+  assetPrefix: string;
 };
+
+type VariantEntry = {
+  shikiTheme: string;
+  mermaidTheme: "default" | "dark";
+  variables: Record<string, string>;
+};
+
+function isValidVariant(v: unknown): v is VariantEntry {
+  const obj = v as Record<string, unknown>;
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    typeof obj.shikiTheme === "string" &&
+    (obj.mermaidTheme === "default" || obj.mermaidTheme === "dark") &&
+    typeof obj.variables === "object" &&
+    obj.variables !== null
+  );
+}
+
+async function loadStyle(dir: string, name: string): Promise<Style | undefined> {
+  const styleFile = Bun.file(resolve(dir, "style.json"));
+  if (!(await styleFile.exists())) return undefined;
+  try {
+    const styleJson = JSON.parse(await styleFile.text()) as Record<string, unknown>;
+    if (typeof styleJson.variables === "object" && styleJson.variables !== null) {
+      return { name, variables: styleJson.variables as Record<string, string> };
+    }
+  } catch {
+    console.warn(`External theme "${name}": invalid style.json, using default style`);
+  }
+  return undefined;
+}
+
+async function loadExtraCSS(dir: string): Promise<string | undefined> {
+  const extraFile = Bun.file(resolve(dir, "extra.css"));
+  if (await extraFile.exists()) {
+    return (await extraFile.text()).trim();
+  }
+  return undefined;
+}
+
+function detectAssetsDir(dir: string): string | undefined {
+  const assetsDirPath = resolve(dir, "assets");
+  if (existsSync(assetsDirPath) && statSync(assetsDirPath).isDirectory()) {
+    return assetsDirPath;
+  }
+  return undefined;
+}
 
 export async function loadExternalTheme(
   themeDir: string,
-): Promise<LoadedExternalTheme | null> {
+): Promise<LoadedExternalTheme[]> {
   const absDir = resolve(themeDir);
   const name = basename(absDir);
 
@@ -20,7 +69,7 @@ export async function loadExternalTheme(
   const themeFile = Bun.file(resolve(absDir, "theme.json"));
   if (!(await themeFile.exists())) {
     console.warn(`External theme "${name}": missing theme.json, skipping`);
-    return null;
+    return [];
   }
 
   let themeJson: unknown;
@@ -28,10 +77,69 @@ export async function loadExternalTheme(
     themeJson = JSON.parse(await themeFile.text());
   } catch {
     console.warn(`External theme "${name}": invalid theme.json, skipping`);
-    return null;
+    return [];
   }
 
   const tj = themeJson as Record<string, unknown>;
+
+  // --- Variant themes ---
+  if (typeof tj.variants === "object" && tj.variants !== null) {
+    const variants = tj.variants as Record<string, unknown>;
+    const parentExtraCSS = await loadExtraCSS(absDir);
+    const parentStyle = await loadStyle(absDir, name);
+    const assetsDir = detectAssetsDir(absDir);
+    const results: LoadedExternalTheme[] = [];
+
+    for (const [variantKey, variantValue] of Object.entries(variants)) {
+      if (!isValidVariant(variantValue)) {
+        console.warn(
+          `External theme "${name}": variant "${variantKey}" must have shikiTheme, mermaidTheme, and variables`,
+        );
+        continue;
+      }
+
+      const variantName = `${name}-${variantKey}`;
+      const variantDir = resolve(absDir, variantKey);
+
+      // Variant-specific overrides (optional subdirectory)
+      let variantExtraCSS: string | undefined;
+      let variantStyle: Style | undefined;
+      if (existsSync(variantDir) && statSync(variantDir).isDirectory()) {
+        variantExtraCSS = await loadExtraCSS(variantDir);
+        variantStyle = await loadStyle(variantDir, variantName);
+      }
+
+      // Combine extra CSS: parent first, then variant-specific
+      let combinedExtraCSS: string | undefined;
+      if (parentExtraCSS && variantExtraCSS) {
+        combinedExtraCSS = `${parentExtraCSS}\n\n${variantExtraCSS}`;
+      } else {
+        combinedExtraCSS = parentExtraCSS ?? variantExtraCSS;
+      }
+
+      const theme: Theme = {
+        name: variantName,
+        shikiTheme: variantValue.shikiTheme,
+        mermaidTheme: variantValue.mermaidTheme,
+        variables: variantValue.variables,
+      };
+      if (combinedExtraCSS) {
+        theme.extraCSS = combinedExtraCSS;
+      }
+
+      results.push({
+        name: variantName,
+        theme,
+        style: variantStyle ?? parentStyle,
+        assetsDir,
+        assetPrefix: name,
+      });
+    }
+
+    return results;
+  }
+
+  // --- Single theme (no variants) ---
   if (
     typeof tj.shikiTheme !== "string" ||
     (tj.mermaidTheme !== "default" && tj.mermaidTheme !== "dark") ||
@@ -41,7 +149,7 @@ export async function loadExternalTheme(
     console.warn(
       `External theme "${name}": theme.json must have shikiTheme (string), mermaidTheme ("default"|"dark"), and variables (object)`,
     );
-    return null;
+    return [];
   }
 
   const theme: Theme = {
@@ -51,45 +159,15 @@ export async function loadExternalTheme(
     variables: tj.variables as Record<string, string>,
   };
 
-  // optional extra.css
-  const extraFile = Bun.file(resolve(absDir, "extra.css"));
-  if (await extraFile.exists()) {
-    theme.extraCSS = (await extraFile.text()).trim();
+  const extraCSS = await loadExtraCSS(absDir);
+  if (extraCSS) {
+    theme.extraCSS = extraCSS;
   }
 
-  // optional style.json
-  let style: Style | undefined;
-  const styleFile = Bun.file(resolve(absDir, "style.json"));
-  if (await styleFile.exists()) {
-    try {
-      const styleJson = JSON.parse(await styleFile.text()) as Record<
-        string,
-        unknown
-      >;
-      if (
-        typeof styleJson.variables === "object" &&
-        styleJson.variables !== null
-      ) {
-        style = {
-          name,
-          variables: styleJson.variables as Record<string, string>,
-        };
-      }
-    } catch {
-      console.warn(
-        `External theme "${name}": invalid style.json, using default style`,
-      );
-    }
-  }
+  const style = await loadStyle(absDir, name);
+  const assetsDir = detectAssetsDir(absDir);
 
-  // optional assets directory
-  let assetsDir: string | undefined;
-  const assetsDirPath = resolve(absDir, "assets");
-  if (existsSync(assetsDirPath) && statSync(assetsDirPath).isDirectory()) {
-    assetsDir = assetsDirPath;
-  }
-
-  return { name, theme, style, assetsDir };
+  return [{ name, theme, style, assetsDir, assetPrefix: name }];
 }
 
 export async function discoverExternalThemes(
@@ -108,7 +186,7 @@ export async function discoverExternalThemes(
       const entryPath = resolve(themesDir, entry);
       if (statSync(entryPath).isDirectory()) {
         const loaded = await loadExternalTheme(entryPath);
-        if (loaded) results.push(loaded);
+        results.push(...loaded);
       }
     }
   }
@@ -116,7 +194,7 @@ export async function discoverExternalThemes(
   // Load explicitly provided theme directories
   for (const dir of extraThemeDirs) {
     const loaded = await loadExternalTheme(dir);
-    if (loaded) results.push(loaded);
+    results.push(...loaded);
   }
 
   return results;

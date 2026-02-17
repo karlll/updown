@@ -40,10 +40,14 @@ let plantumlServer: PlantUMLServer | null = null;
 
 // Load external themes and merge into registries
 const externalThemes = await discoverExternalThemes(filePath, cliThemeDirs);
+const themeAssetMap = new Map<string, string>();
 for (const ext of externalThemes) {
   themes[ext.name] = ext.theme;
   if (ext.style) {
     styles[ext.name] = ext.style;
+  }
+  if (ext.assetsDir) {
+    themeAssetMap.set(ext.assetPrefix, ext.assetsDir);
   }
 }
 
@@ -191,13 +195,13 @@ const server = Bun.serve({
       }
     }
 
-    // Serve external theme assets: /themes/{name}/assets/{path}
+    // Serve external theme assets: /themes/{prefix}/assets/{path}
     const themeAssetMatch = url.pathname.match(/^\/themes\/([^/]+)\/assets\/(.+)$/);
     if (themeAssetMatch) {
-      const ext = externalThemes.find((t) => t.name === themeAssetMatch[1]);
-      if (ext?.assetsDir) {
-        const assetPath = resolve(ext.assetsDir, themeAssetMatch[2]!);
-        if (assetPath.startsWith(ext.assetsDir)) {
+      const assetsDir = themeAssetMap.get(themeAssetMatch[1]!);
+      if (assetsDir) {
+        const assetPath = resolve(assetsDir, themeAssetMatch[2]!);
+        if (assetPath.startsWith(assetsDir)) {
           const file = Bun.file(assetPath);
           if (await file.exists()) {
             return new Response(file);
