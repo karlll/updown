@@ -24,6 +24,8 @@ export function generatePlantUMLScript(): string {
       var container = el.closest(".fence-plantuml");
       if (container) {
         container.innerHTML = svg;
+        var svgEl = container.querySelector('svg');
+        if (svgEl) svgEl.classList.add('svg-nav-enabled');
       } else {
         el.outerHTML = svg;
       }
@@ -33,7 +35,9 @@ export function generatePlantUMLScript(): string {
       el.style.color = "red";
     });
   });
-  Promise.all(promises);
+  Promise.all(promises).then(function() {
+    if (window.svgNavInit) window.svgNavInit();
+  });
 })();
 `.trim();
 }

@@ -181,4 +181,71 @@ img {
 
 em { font-style: italic; color: var(--em); }
 strong { font-weight: 700; color: var(--strong); }
+
+.svg-nav-host {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  line-height: 0;
+}
+
+.svg-nav-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 130ms ease;
+  pointer-events: none;
+  display: grid;
+}
+
+.svg-nav-host:hover > .svg-nav-overlay,
+.svg-nav-host.svg-nav-hover > .svg-nav-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.svg-nav-controls {
+  justify-self: end;
+  align-self: end;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.svg-nav-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.svg-nav-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.svg-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.svg-nav-host.svg-nav-grab-ready {
+  cursor: grab;
+}
+
+.svg-nav-host.svg-nav-dragging {
+  cursor: grabbing;
+}
 `.trim();

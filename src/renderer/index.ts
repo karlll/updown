@@ -79,6 +79,7 @@ ${slideshowHtml}
 ${mermaidTags}
 ${plantumlTag}
 ${scriptTag}
+<script defer src="/assets/svg-nav.js"></script>
 </body>
 </html>`;
 

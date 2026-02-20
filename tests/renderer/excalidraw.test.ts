@@ -53,7 +53,8 @@ describe("renderNode with excalidraw SVG map", () => {
     };
     const html = renderNode(node, reg, svgMap);
     expect(html).toContain("excalidraw-embed");
-    expect(html).toContain(fakeSvg);
+    expect(html).toContain('class="svg-nav-enabled"');
+    expect(html).toContain("<rect/></svg>");
     expect(html).toContain('aria-label="My diagram"');
     expect(html).not.toContain("<img");
   });

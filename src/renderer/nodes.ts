@@ -46,7 +46,8 @@ function renderInline(node: PhrasingContent, reg: FenceRegistry, svgMap?: Map<st
       const svg = svgMap?.get(node.url);
       if (svg) {
         const alt = node.alt ? ` aria-label="${escapeHtml(node.alt)}"` : "";
-        return `<span class="excalidraw-embed"${alt}>${svg}</span>`;
+        const navSvg = svg.replace(/^<svg\b/, '<svg class="svg-nav-enabled"');
+        return `<span class="excalidraw-embed"${alt}>${navSvg}</span>`;
       }
       return `<img src="${escapeHtml(node.url)}" alt="${escapeHtml(node.alt ?? "")}">`;
     }

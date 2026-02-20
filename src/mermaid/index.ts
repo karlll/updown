@@ -6,6 +6,15 @@
 export function generateMermaidScript(theme: "default" | "dark"): string {
   return `
 mermaid.initialize({ startOnLoad: false, theme: "${theme}" });
-mermaid.run();
+mermaid.run().then(function() {
+  document.querySelectorAll('.mermaid svg').forEach(function(svg) {
+    var mw = parseFloat(svg.style.maxWidth);
+    if (!isNaN(mw) && svg.getAttribute('width') === '100%') {
+      svg.setAttribute('width', mw + 'px');
+    }
+    svg.classList.add('svg-nav-enabled');
+  });
+  if (window.svgNavInit) window.svgNavInit();
+});
 `.trim();
 }

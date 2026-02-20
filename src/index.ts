@@ -17,6 +17,8 @@ import { discoverExternalThemes } from "./styles/loader.ts";
 import type { LoadedExternalTheme } from "./styles/loader.ts";
 // @ts-ignore — Bun text import
 import mermaidClientJs from "mermaid/dist/mermaid.min.js" with { type: "text" };
+// @ts-ignore — Bun text import
+import svgNavJs from "./svg-nav/svg-nav.js" with { type: "text" };
 
 // Parse CLI arguments: [--theme <dir>]... <markdown-file>
 const args = Bun.argv.slice(2);
@@ -183,6 +185,12 @@ const server = Bun.serve({
 
     if (url.pathname === "/assets/mermaid.min.js") {
       return new Response(mermaidClientJs, {
+        headers: { "Content-Type": "application/javascript" },
+      });
+    }
+
+    if (url.pathname === "/assets/svg-nav.js") {
+      return new Response(svgNavJs as unknown as string, {
         headers: { "Content-Type": "application/javascript" },
       });
     }
