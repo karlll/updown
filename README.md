@@ -16,7 +16,7 @@ Markdown to slideshow, served in the browser.
 - 5 style presets (default, modern, classic, smooth, terminal)
 - External theme directories for custom branding (fonts, logos, colors)
 - External CSS file support
-- Keyboard navigation and auto-scaling
+- Keyboard navigation and auto-scaling (text + SVG diagrams)
 - Interactive reload (`r`) and quit (`q`)
 
 ## Install

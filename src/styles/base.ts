@@ -64,6 +64,9 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 { font-size: var(--h1-size); color: var(--h1-color); }
 h2 { font-size: var(--h2-size); color: var(--h2-color); }
+
+.slide h1 { font-size: var(--h1-size-fixed); }
+.slide h2 { font-size: var(--h2-size-fixed); }
 h3 { font-size: var(--h3-size); color: var(--h3-color); }
 h4 { font-size: var(--h4-size); color: var(--h3-color); }
 h5, h6 { color: var(--h3-color); }
@@ -163,20 +166,57 @@ img {
   border-radius: var(--border-radius);
 }
 
+.fence-mermaid,
+.fence-plantuml,
+.excalidraw-embed {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide > p:has(> .excalidraw-embed) {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.slide > p:has(> .excalidraw-embed) > .excalidraw-embed {
+  width: 100%;
+  height: 100%;
+}
+
+.fence-mermaid svg,
+.fence-plantuml svg,
 .excalidraw-embed svg {
+  max-height: 100%;
+  width: auto;
   max-width: 100%;
-  height: auto;
+}
+
+.excalidraw-embed svg {
   filter: var(--excalidraw-filter, none);
 }
 
-.fence-mermaid svg {
-  max-width: 100%;
-  height: auto;
+#slideshow[data-fm-svg-scaling="false"] .fence-mermaid,
+#slideshow[data-fm-svg-scaling="false"] .fence-plantuml,
+#slideshow[data-fm-svg-scaling="false"] .excalidraw-embed {
+  flex: 0 0 auto;
+  min-height: auto;
+  overflow: visible;
 }
 
-.fence-plantuml svg {
-  max-width: 100%;
-  height: auto;
+#slideshow[data-fm-svg-scaling="false"] .slide > p:has(> .excalidraw-embed) {
+  flex: 0 0 auto;
+  min-height: auto;
+  overflow: visible;
+  display: block;
 }
 
 em { font-style: italic; color: var(--em); }
@@ -188,6 +228,19 @@ strong { font-weight: 700; color: var(--strong); }
   width: fit-content;
   max-width: 100%;
   line-height: 0;
+}
+
+.fence-mermaid .svg-nav-host,
+.fence-plantuml .svg-nav-host,
+.excalidraw-embed .svg-nav-host {
+  width: 100%;
+  height: 100%;
+}
+
+#slideshow[data-fm-svg-scaling="false"] .fence-mermaid .svg-nav-host,
+#slideshow[data-fm-svg-scaling="false"] .fence-plantuml .svg-nav-host,
+#slideshow[data-fm-svg-scaling="false"] .excalidraw-embed .svg-nav-host {
+  width: fit-content;
 }
 
 .svg-nav-overlay {

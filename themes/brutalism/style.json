@@ -8,6 +8,8 @@
     "--line-height-heading": "1.1",
     "--h1-size": "3.5em",
     "--h2-size": "2.4em",
+    "--h1-size-fixed": "4.55rem",
+    "--h2-size-fixed": "3.12rem",
     "--h3-size": "1.6em",
     "--h4-size": "1.2em",
     "--heading-weight": "700",

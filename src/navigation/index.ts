@@ -38,6 +38,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
   fitSlide(slides[0]);
 
+  window.fitCurrentSlide = function() {
+    fitSlide(slides[currentIndex]);
+  };
+
   document.addEventListener("keydown", function(e) {
     if (e.key === "ArrowRight" && currentIndex < slides.length - 1) {
       slides[currentIndex].style.display = "none";

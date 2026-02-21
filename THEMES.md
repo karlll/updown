@@ -66,7 +66,8 @@ Styles set CSS custom properties that the base stylesheet references:
 | `--font-family-code` | Code block font |
 | `--font-size-base` | Base font size |
 | `--line-height` | Body line height |
-| `--h1-size` .. `--h4-size` | Heading sizes |
+| `--h1-size` .. `--h4-size` | Heading sizes (em-based, scale with auto-fit) |
+| `--h1-size-fixed`, `--h2-size-fixed` | Fixed heading sizes (rem-based, immune to auto-scaling) |
 | `--heading-weight` | Heading font weight |
 | `--heading-transform` | Heading text transform (e.g. `uppercase`) |
 | `--heading-letter-spacing` | Heading letter spacing |

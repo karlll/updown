@@ -16,6 +16,19 @@ class SvgNavigator {
     this.host.appendChild(svg);
     this.host.appendChild(this.createOverlay());
     this.attachEvents();
+
+    const slideshow = document.getElementById("slideshow");
+    const svgScaling = !slideshow || slideshow.getAttribute("data-fm-svg-scaling") !== "false";
+    if (svgScaling) {
+      this.svg.removeAttribute("width");
+      this.svg.removeAttribute("height");
+      this.svg.style.width = "100%";
+      this.svg.style.height = "100%";
+      if (this.svg.getAttribute("preserveAspectRatio") === "none") {
+        this.svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+      }
+    }
+
     this.applyViewBox();
   }
 

@@ -14,7 +14,13 @@ var afterMermaidRender = function() {
     }
     svg.classList.add('svg-nav-enabled');
   });
+  document.querySelectorAll('.fence-mermaid pre.mermaid').forEach(function(pre) {
+    var fence = pre.parentElement;
+    while (pre.firstChild) fence.appendChild(pre.firstChild);
+    pre.remove();
+  });
   if (window.svgNavInit) window.svgNavInit();
+  if (window.fitCurrentSlide) window.fitCurrentSlide();
 };
 mermaid.run().then(afterMermaidRender).catch(afterMermaidRender);
 `.trim();

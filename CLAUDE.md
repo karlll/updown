@@ -35,7 +35,7 @@ Six core components:
 
 4. **Styles** (`src/styles/`) — Theme system using CSS custom properties. 14 built-in themes: `light`, `dark`, `catppuccin-latte`/`frappe`/`macchiato`/`mocha`, `monokai-dark`/`light`, `gruvbox-dark`/`light`, `nord-dark`/`light`, `solarized-dark`/`light`. Each theme maps to a Shiki syntax highlighting theme. Selected via front matter `theme` key. Themes may include optional `extraCSS` for theme-specific effects. Supports external theme directories (`themes/` next to markdown file or via `--theme` CLI flag) with `theme.json`, `style.json`, `extra.css`, and `assets/`.
 
-5. **Navigation** (`src/navigation/`) — Client-side keyboard navigation (ArrowLeft/ArrowRight) and auto-scaling (reduces font-size via binary search when slide content overflows the viewport).
+5. **Navigation** (`src/navigation/`) — Client-side keyboard navigation (ArrowLeft/ArrowRight) and auto-scaling (reduces font-size via binary search when slide content overflows the viewport). Exposes `window.fitCurrentSlide()` for async renderers to trigger re-fit. h1/h2 use fixed rem sizes immune to scaling.
 
 6. **Excalidraw** (`src/excalidraw/`) — Server-side rendering of `.excalidraw` files to inline SVG via `@excalidraw/utils`. Uses a `happy-dom` shim for DOM globals. Fonts are subsetted and inlined as base64 data URLs.
 
@@ -65,7 +65,8 @@ Six core components:
 - Values become attributes on the `#slideshow` div, prefixed with `data-fm-`
 - Exception: `class` is passed as a regular `class` attribute (no prefix)
 - Special key: `theme` selects the color theme (14 built-in: `light`, `dark`, catppuccin, monokai, gruvbox, nord, solarized variants)
-- Special key: `style` selects a style preset (`default`, `modern`, `classic`) or a path to an external CSS file
+- Special key: `style` selects a style preset (`default`, `modern`, `classic`, `smooth`, `terminal`) or a path to an external CSS file
+- Special key: `svg-scaling` controls SVG diagram auto-scaling (`false` to disable; default is on)
 - Arrays become space-separated strings
 - Only string, number, and flat arrays of string/number are valid types
 

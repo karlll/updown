@@ -37,6 +37,7 @@ export function generatePlantUMLScript(): string {
   });
   Promise.all(promises).then(function() {
     if (window.svgNavInit) window.svgNavInit();
+    if (window.fitCurrentSlide) window.fitCurrentSlide();
   });
 })();
 `.trim();

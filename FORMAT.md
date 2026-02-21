@@ -324,4 +324,22 @@ The built-in `accent-last-column` utility sets the last column's background to t
 
 ## Auto-Scaling
 
-Slide content is automatically scaled to fit the viewport. When content would overflow the visible area, the font size is reduced until everything fits. This applies to all text, headings, code blocks, and margins proportionally. If the content fits at the default size, no scaling is applied.
+Slide content is automatically scaled to fit the viewport. When content would overflow the visible area, the font size is reduced until everything fits. If the content fits at the default size, no scaling is applied.
+
+### Headings
+
+`h1` and `h2` headings use fixed `rem`-based sizes that are immune to auto-scaling. This keeps slide titles stable while body text, code blocks, and lower-level headings (`h3`–`h6`) scale down to fit.
+
+### SVG Diagrams
+
+Mermaid, PlantUML, and Excalidraw diagrams automatically scale to fill the available space on the slide. The SVG containers participate in the slide's flex layout — after headings and text take their natural size, diagrams fill the remaining vertical space while preserving their aspect ratio.
+
+This behavior is on by default. To disable it and use natural SVG sizes instead, set `svg-scaling` to `false` in front matter:
+
+```markdown
+---
+svg-scaling: false
+---
+```
+
+After asynchronous diagram rendering (Mermaid and PlantUML render client-side), the slide is re-fitted automatically.
