@@ -6,7 +6,7 @@
 export function generateMermaidScript(theme: "default" | "dark"): string {
   return `
 mermaid.initialize({ startOnLoad: false, theme: "${theme}" });
-mermaid.run().then(function() {
+var afterMermaidRender = function() {
   document.querySelectorAll('.mermaid svg').forEach(function(svg) {
     var mw = parseFloat(svg.style.maxWidth);
     if (!isNaN(mw) && svg.getAttribute('width') === '100%') {
@@ -15,6 +15,7 @@ mermaid.run().then(function() {
     svg.classList.add('svg-nav-enabled');
   });
   if (window.svgNavInit) window.svgNavInit();
-});
+};
+mermaid.run().then(afterMermaidRender).catch(afterMermaidRender);
 `.trim();
 }

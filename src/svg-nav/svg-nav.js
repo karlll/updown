@@ -144,5 +144,11 @@ const navigators = Array.from(document.querySelectorAll(`svg.${ENABLE_CLASS}`)).
 window.svgNavInit = function () {
   const newSvgs = Array.from(document.querySelectorAll(`svg.${ENABLE_CLASS}`))
     .filter((svg) => !navigators.some((n) => n.svg === svg));
-  newSvgs.forEach((svg) => navigators.push(new SvgNavigator(svg)));
+  newSvgs.forEach((svg) => {
+    try {
+      navigators.push(new SvgNavigator(svg));
+    } catch (e) {
+      // ignore initialization errors for individual SVGs
+    }
+  });
 };

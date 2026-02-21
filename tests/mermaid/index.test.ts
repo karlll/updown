@@ -13,8 +13,9 @@ describe("generateMermaidScript", () => {
     expect(script).toContain('theme: "dark"');
   });
 
-  test("calls mermaid.run()", () => {
+  test("calls mermaid.run() with then and catch", () => {
     const script = generateMermaidScript("default");
     expect(script).toContain("mermaid.run()");
+    expect(script).toContain(".catch(afterMermaidRender)");
   });
 });
