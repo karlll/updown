@@ -4,8 +4,8 @@ version: 1
 class:
   - presentation
   - widescreen
-theme: synthwave-84
-style: terminal
+theme: catppuccin-mocha
+style: smooth
 ---
 
 # Welcome to updown
