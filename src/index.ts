@@ -201,12 +201,10 @@ const server = Bun.serve({
     }
 
     if (url.pathname === "/health") {
-      return Response.json({
-        status: "ok",
-        timestamp: new Date().toISOString(),
-        version: appVersion,
-        commit: appCommit,
-      });
+      return Response.json(
+        { status: "ok", timestamp: new Date().toISOString(), version: appVersion, commit: appCommit },
+        { headers: { "Access-Control-Allow-Origin": "*" } },
+      );
     }
 
     if (url.pathname === "/assets/mermaid.min.js") {
