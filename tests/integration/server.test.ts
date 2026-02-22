@@ -95,4 +95,22 @@ describe("server", () => {
     const res = await fetch(`${baseUrl}/unknown`);
     expect(res.status).toBe(404);
   });
+
+  test("GET /health returns 200 with application/json", async () => {
+    const res = await fetch(`${baseUrl}/health`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("application/json");
+  });
+
+  test("GET /health returns correct fields", async () => {
+    const res = await fetch(`${baseUrl}/health`);
+    const body = await res.json() as Record<string, string>;
+    expect(body.status).toBe("ok");
+    expect(typeof body.timestamp).toBe("string");
+    expect(new Date(body.timestamp).toISOString()).toBe(body.timestamp);
+    expect(typeof body.version).toBe("string");
+    expect(body.version.length).toBeGreaterThan(0);
+    expect(typeof body.commit).toBe("string");
+    expect(body.commit.length).toBeGreaterThan(0);
+  });
 });

@@ -6,6 +6,9 @@ out
 dist
 *.tgz
 
+# generated build info (created by Makefile)
+src/build-info.ts
+
 # code coverage
 coverage
 *.lcov
