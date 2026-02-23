@@ -174,7 +174,7 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
 }
 
 function collectExcalidrawUrls(node: RootContent | PhrasingContent, urls: Set<string>): void {
-  if (node.type === "image" && node.url.endsWith(".excalidraw")) {
+  if (node.type === "image" && (node.url.endsWith(".excalidraw") || node.url.endsWith(".excalidraw.md"))) {
     urls.add(node.url);
     return;
   }
