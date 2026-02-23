@@ -117,6 +117,14 @@ Excalidraw drawings are rendered as inline SVG.
 
 ---
 
+## Obsidian Excalidraw Diagram
+
+![Compressed drawing](../renderer/excalidraw/compressed-drawing.excalidraw.md)
+
+This drawing is from the [Obsidian Excalidraw plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin). It is stored as a `.excalidraw.md` file with the drawing data compressed using LZ-string.
+
+---
+
 ## PlantUML Diagram
 
 ```plantuml
