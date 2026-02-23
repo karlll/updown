@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate build-info
+        run: make build-info
+
+      - name: Build all platforms
+        run: |
+          bun run build-standalone:linux-x64
+          bun run build-standalone:linux-arm64
+          bun run build-standalone:darwin-x64
+          bun run build-standalone:darwin-arm64
+          bun run build-standalone:windows
+
+      - name: Upload release artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/updown-linux-x64
+            dist/updown-linux-arm64
+            dist/updown-darwin-x64
+            dist/updown-darwin-arm64
+            dist/updown-windows-x64.exe
+          generate_release_notes: true
