@@ -47,6 +47,9 @@ jobs:
           cp dist/updown-windows-x64.exe updown.exe
           zip release/updown-windows-x64.zip updown.exe FORMAT.md THEMES.md
 
+          # Themes archive (platform-independent)
+          zip -r release/themes.zip themes/
+
       - name: Upload release artifacts
         uses: softprops/action-gh-release@v2
         with:
@@ -56,4 +59,5 @@ jobs:
             release/updown-darwin-x64.zip
             release/updown-darwin-arm64.zip
             release/updown-windows-x64.zip
+            release/themes.zip
           generate_release_notes: true
