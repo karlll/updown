@@ -161,6 +161,16 @@ Images referencing `.excalidraw` files are rendered as inline SVG, with Excalidr
 
 The path is resolved relative to the markdown file. The alt text becomes an `aria-label` on the embedding element. If the file is missing or contains invalid JSON, an error message is shown in the slide.
 
+### Obsidian Excalidraw format
+
+Files saved by the [Obsidian Excalidraw plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin) use a `.excalidraw.md` extension and store the drawing data as LZ-string compressed JSON inside an Obsidian comment block. These are supported directly:
+
+```markdown
+![My drawing](./diagrams/sketch.excalidraw.md)
+```
+
+The compressed data is extracted and decompressed automatically. Rendering is otherwise identical to `.excalidraw` files.
+
 Regular images (`.png`, `.jpg`, etc.) continue to render as normal `<img>` tags.
 
 ---
