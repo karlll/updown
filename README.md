@@ -39,6 +39,19 @@ bun src/index.ts tests/integration/demo.md
 
 Then open `http://localhost:3000` and navigate slides with **ArrowLeft** / **ArrowRight**.
 
+### Environment Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `3000` | Port to serve on. Set to `0` for a randomly assigned port. |
+| `PLANTUML_JAR` | — | Path to a PlantUML `.jar` file. Required for PlantUML diagram rendering. |
+
+Example:
+
+```
+PLANTUML_JAR=/path/to/plantuml.jar PORT=8080 bun src/index.ts presentation.md
+```
+
 ## Standalone Binary
 
 Pre-built self-contained binaries are available on the [releases page](https://github.com/karlll/updown/releases). No Bun or Node.js installation required.
