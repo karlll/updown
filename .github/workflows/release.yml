@@ -31,39 +31,29 @@ jobs:
       - name: Build all platforms and package
         run: |
           mkdir -p release
-
-          # Linux x64
           bun run build-standalone:linux-x64
           cp dist/updown-linux-x64 updown
-          zip release/updown-linux-x64.zip updown
-          rm updown
-
-          # Linux arm64
+          zip release/updown-linux-x64.zip updown FORMAT.md THEMES.md
           bun run build-standalone:linux-arm64
           cp dist/updown-linux-arm64 updown
-          zip release/updown-linux-arm64.zip updown
-          rm updown
-
-          # macOS x64
+          zip release/updown-linux-arm64.zip updown FORMAT.md THEMES.md
           bun run build-standalone:darwin-x64
           cp dist/updown-darwin-x64 updown
-          zip release/updown-darwin-x64.zip updown
-          rm updown
-
-          # macOS arm64
+          zip release/updown-darwin-x64.zip updown FORMAT.md THEMES.md
           bun run build-standalone:darwin-arm64
           cp dist/updown-darwin-arm64 updown
-          zip release/updown-darwin-arm64.zip updown
-          rm updown
-
-          # Windows x64
+          zip release/updown-darwin-arm64.zip updown FORMAT.md THEMES.md
           bun run build-standalone:windows
           cp dist/updown-windows-x64.exe updown.exe
-          zip release/updown-windows-x64.zip updown.exe
-          rm updown.exe
+          zip release/updown-windows-x64.zip updown.exe FORMAT.md THEMES.md
 
       - name: Upload release artifacts
         uses: softprops/action-gh-release@v2
         with:
-          files: release/*.zip
+          files: |
+            release/updown-linux-x64.zip
+            release/updown-linux-arm64.zip
+            release/updown-darwin-x64.zip
+            release/updown-darwin-arm64.zip
+            release/updown-windows-x64.zip
           generate_release_notes: true
