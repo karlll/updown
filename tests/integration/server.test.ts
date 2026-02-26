@@ -113,4 +113,39 @@ describe("server", () => {
     expect(typeof body.commit).toBe("string");
     expect(body.commit.length).toBeGreaterThan(0);
   });
+
+  test("POST /stop responds with stopping and process exits", async () => {
+    const cwd = import.meta.dir + "/../..";
+    const stopProc = Bun.spawn(["bun", "src/index.ts", "tests/integration/test.md"], {
+      cwd,
+      stdout: "pipe",
+      stderr: "ignore",
+      env: { ...process.env, PORT: "0" },
+    });
+
+    const stdout = stopProc.stdout as ReadableStream<Uint8Array>;
+    const reader = stdout.getReader();
+    let output = "";
+    let stopUrl = "";
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      output += new TextDecoder().decode(value);
+      const match = output.match(/http:\/\/\S+/);
+      if (match) {
+        stopUrl = match[0].replace(/\/$/, "");
+        break;
+      }
+    }
+    reader.releaseLock();
+    if (!stopUrl) throw new Error(`Could not find URL in server output: ${output}`);
+
+    const res = await fetch(`${stopUrl}/stop`, { method: "POST" });
+    expect(res.status).toBe(200);
+    const body = await res.json() as { status: string };
+    expect(body.status).toBe("stopping");
+
+    const exitCode = await stopProc.exited;
+    expect(exitCode).toBe(0);
+  });
 });

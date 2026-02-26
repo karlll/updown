@@ -245,6 +245,11 @@ const server = Bun.serve({
       }
     }
 
+    if (url.pathname === "/stop" && req.method === "POST") {
+      setTimeout(shutdown, 0);
+      return Response.json({ status: "stopping" });
+    }
+
     if (url.pathname === "/plantuml/render" && req.method === "POST" && plantumlServer) {
       const body = await req.json();
       const res = await fetch(`http://127.0.0.1:${plantumlServer.port}/render`, {
@@ -272,6 +277,12 @@ const server = Bun.serve({
   },
 });
 
+function shutdown(): never {
+  plantumlServer?.stop();
+  server.stop();
+  process.exit(0);
+}
+
 process.on("exit", () => plantumlServer?.stop());
 
 const fileName = filePath.split("/").pop() ?? filePath;
@@ -287,9 +298,7 @@ if (process.stdin.isTTY) {
       rendered = await loadAndRender(filePath);
       console.log(`reloaded ${fileName}`);
     } else if (key === "q" || key === "\x03") {
-      plantumlServer?.stop();
-      server.stop();
-      process.exit(0);
+      shutdown();
     }
   });
 }
