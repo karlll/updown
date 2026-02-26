@@ -104,7 +104,7 @@ describe("server", () => {
 
   test("GET /health returns correct fields", async () => {
     const res = await fetch(`${baseUrl}/health`);
-    const body = await res.json() as Record<string, string>;
+    const body = await res.json() as { status: string; timestamp: string; version: string; commit: string };
     expect(body.status).toBe("ok");
     expect(typeof body.timestamp).toBe("string");
     expect(new Date(body.timestamp).toISOString()).toBe(body.timestamp);
