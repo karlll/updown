@@ -5,13 +5,11 @@ export type PlantUMLServer = {
   stop: () => void;
 };
 
-const DEFAULT_JAR = resolve(import.meta.dir, "../../tools/plantuml/plantuml.jar");
 const DEFAULT_PORT = 18123;
 const STARTUP_TIMEOUT = 15000;
 const POLL_INTERVAL = 200;
 
-export async function startPlantUMLServer(): Promise<PlantUMLServer> {
-  const jarPath = process.env.PLANTUML_JAR ?? DEFAULT_JAR;
+export async function startPlantUMLServer(jarPath: string): Promise<PlantUMLServer> {
   const port = parseInt(process.env.PLANTUML_PORT ?? String(DEFAULT_PORT), 10);
 
   const jarFile = Bun.file(jarPath);

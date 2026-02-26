@@ -207,7 +207,7 @@ Bob --> Alice: Hi there
 ```
 ````
 
-A PlantUML server is started automatically when the document contains plantuml code fences. The server requires Java and the PlantUML JAR file (defaults to `tools/plantuml/plantuml.jar`, overridable via `PLANTUML_JAR` env var). The server port defaults to 18123 (overridable via `PLANTUML_PORT`).
+A PlantUML server is started automatically when the document contains plantuml code fences and `--plantuml-jar <path>` is provided on the command line. Without the argument, plantuml blocks are rendered as plain code blocks. The server requires Java and the PlantUML JAR file. The server port defaults to 18123 (overridable via `PLANTUML_PORT`).
 
 All diagram types supported by PlantUML work — sequence diagrams, class diagrams, activity diagrams, component diagrams, etc.
 

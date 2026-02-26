@@ -28,13 +28,14 @@ bun install
 ## Usage
 
 ```
-bun src/index.ts [--theme <theme-dir>] <path-to-markdown-file>
+updown [--theme <theme-dir>] [--plantuml-jar <path>] <path-to-markdown-file>
 ```
 
 Example using the included demo:
 
 ```
-bun src/index.ts tests/integration/demo.md
+bun src/index.ts tests/integration/demo.md  # dev
+updown tests/integration/demo.md            # binary
 ```
 
 Then open `http://localhost:3000` and navigate slides with **ArrowLeft** / **ArrowRight**.
@@ -44,12 +45,11 @@ Then open `http://localhost:3000` and navigate slides with **ArrowLeft** / **Arr
 | Variable | Default | Description |
 |---|---|---|
 | `PORT` | `3000` | Port to serve on. Set to `0` for a randomly assigned port. |
-| `PLANTUML_JAR` | — | Path to a PlantUML `.jar` file. Required for PlantUML diagram rendering. |
 
 Example:
 
 ```
-PLANTUML_JAR=/path/to/plantuml.jar PORT=8080 bun src/index.ts presentation.md
+PORT=8080 updown --plantuml-jar /path/to/plantuml.jar presentation.md
 ```
 
 ## Standalone Binary

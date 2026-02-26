@@ -37,21 +37,24 @@ try {
   } catch { /* not a git repo or git unavailable */ }
 }
 
-// Parse CLI arguments: [--theme <dir>]... <markdown-file>
+// Parse CLI arguments: [--theme <dir>]... [--plantuml-jar <path>] <markdown-file>
 const args = Bun.argv.slice(2);
 const cliThemeDirs: string[] = [];
 let filePath: string | undefined;
+let plantumlJarPath: string | undefined;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--theme" && i + 1 < args.length) {
     cliThemeDirs.push(args[++i]!);
+  } else if (args[i] === "--plantuml-jar" && i + 1 < args.length) {
+    plantumlJarPath = args[++i]!;
   } else if (!args[i]!.startsWith("--")) {
     filePath = args[i];
   }
 }
 
 if (!filePath) {
-  console.error("Usage: bun src/index.ts [--theme <theme-dir>] <path-to-markdown-file>");
+  console.error("Usage: updown [--theme <theme-dir>] [--plantuml-jar <path>] <path-to-markdown-file>");
   process.exit(1);
 }
 
@@ -156,9 +159,9 @@ async function loadAndRender(path: string): Promise<RenderedSlideShow> {
       },
     });
   }
-  if (hasPlantUML) {
+  if (hasPlantUML && plantumlJarPath) {
     if (!plantumlServer) {
-      plantumlServer = await startPlantUMLServer();
+      plantumlServer = await startPlantUMLServer(plantumlJarPath);
     }
     fenceRegistry.register({
       lang: "plantuml",
