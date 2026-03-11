@@ -91,7 +91,7 @@ data-topic: quotes
 
 Here is a paragraph with **bold**, *italic*, `code`, and a [link](http://example.com) all in one line.
 
-![Placeholder image](https://via.placeholder.com/300x200)
+![dawg](https://picsum.photos/id/237/200/300)
 
 Another paragraph below the image.
 
